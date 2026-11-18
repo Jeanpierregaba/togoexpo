@@ -1,0 +1,30 @@
+# Certificats HTTPS obtenus et renouvelés automatiquement (Let's Encrypt),
+# dès que les domaines pointent vers ce serveur.
+{
+	email {$ACME_EMAIL}
+}
+
+# Le site public.
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy front:3000
+}
+
+www.{$SITE_DOMAIN} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+# Le CMS. Il n'a pas de site public : seuls l'administration, l'API GraphQL et
+# les médias répondent ; toute autre adresse renvoie vers le site public.
+{$CMS_DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size 32MB
+	}
+
+	# (xmlrpc.php, inutile ici, est donc lui aussi renvoyé vers le site.)
+	@public not path /wp-admin* /wp-login.php /wp-json* /graphql* /wp-content/* /wp-includes/* /wp-cron.php /index.php
+	redir @public https://{$SITE_DOMAIN}/ 302
+
+	reverse_proxy wordpress:80
+}

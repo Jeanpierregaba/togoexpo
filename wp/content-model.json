@@ -1,0 +1,58 @@
+{
+  "postTypes": [
+    {
+      "key": "edition",
+      "label": "Éditions",
+      "graphql": "Edition",
+      "graphqlPlural": "Editions",
+      "fields": [
+        { "name": "annee", "type": "number", "required": true, "example": 2025 },
+        { "name": "ville", "type": "text", "required": true, "example": "Osaka" },
+        { "name": "pays", "type": "text", "required": true, "example": "Japon" },
+        { "name": "theme", "type": "textarea", "example": "Politique d'inclusion et de protection sociale..." },
+        { "name": "date_debut", "type": "date", "example": "2025-04-13" },
+        { "name": "date_fin", "type": "date", "example": "2025-10-13" },
+        { "name": "pavillon_description", "type": "wysiwyg" },
+        { "name": "galerie", "type": "gallery" },
+        { "name": "video_url", "type": "url" },
+        { "name": "est_evenement_futur", "type": "true_false", "note": "1 seul à true, pilote le countdown + hero" }
+      ]
+    },
+    {
+      "key": "evenement",
+      "label": "Événements",
+      "graphql": "Evenement",
+      "graphqlPlural": "Evenements",
+      "fields": [
+        { "name": "date", "type": "date_time", "required": true },
+        { "name": "lieu", "type": "text", "required": true },
+        { "name": "edition_liee", "type": "relationship_edition" },
+        { "name": "inscription_url", "type": "url" }
+      ]
+    },
+    {
+      "key": "partenaire",
+      "label": "Partenaires",
+      "graphql": "Partenaire",
+      "graphqlPlural": "Partenaires",
+      "fields": [
+        { "name": "logo", "type": "image", "required": true },
+        { "name": "site_url", "type": "url" },
+        { "name": "type", "type": "select", "choices": ["institutionnel", "prive", "media"] }
+      ]
+    }
+  ],
+  "postsDefaults": {
+    "actus": "Utiliser les Posts natifs + categorie Actus. Champs ACF : chapeau, image_hero, a_la_une (true/false). Pas de date 01/01/1970 : date obligatoire.",
+    "faq": "CPT faq ou bloc ACF repeater sur page. Champs : question, reponse (wysiwyg). Interdit : Lorem ipsum."
+  },
+  "optionsPage": {
+    "key": "togoexpo_settings",
+    "fields": ["email_contact", "telephone", "adresse", "facebook", "instagram", "linkedin_public", "youtube", "flickr"]
+  },
+  "notes": [
+    "Tout CPT et tout champ ACF doit avoir Show in GraphQL = true.",
+    "Le lien LinkedIn actuel /admin/page-posts/published/ est invalide, remplacer par URL publique entreprise.",
+    "FR/EN via Polylang : exposer languages dans WPGraphQL-Polylang (plugin additionnel si besoin)."
+  ]
+}

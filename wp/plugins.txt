@@ -1,0 +1,18 @@
+# Plugins cibles — slugs wordpress.org gratuits et valides. Pas d'Elementor.
+# Socle T1 (installé par seed.sh) :
+wp-graphql
+# Phase 2 (admin, quand le socle est validé) :
+advanced-custom-fields
+wpgraphql-acf
+polylang
+seo-by-rank-math
+fluentform
+# Prod / médias / sécurité :
+enable-media-replace
+redirection
+wordfence
+# Dev only :
+query-monitor
+# NOTE : l'ancien slug "advanced-custom-fields-pro" exige une licence payante.
+# T1 n'a besoin ni d'ACF ni de wpgraphql-acf : les champs vivent en post_meta
+# via mu-plugins/togoexpo-cpt.php, exposés en GraphQL sous `editionFields`.

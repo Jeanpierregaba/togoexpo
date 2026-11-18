@@ -1,0 +1,548 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  /* Poppins partout : titres, texte courant et libellés. */
+  --font-display: var(--font-poppins);
+  --font-body: var(--font-poppins);
+  --font-mono: var(--font-poppins);
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  @apply bg-forest text-cream font-body antialiased;
+}
+
+::selection {
+  background: #ffce00;
+  color: #166c54;
+}
+
+/* Japonais : polices système + césures adaptées (Instrument/Bricolage ne couvrent pas les kanas/kanjis) */
+html[lang='ja'] body {
+  font-family:
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', var(--font-body), system-ui, sans-serif;
+  line-break: strict;
+  overflow-wrap: anywhere;
+}
+html[lang='ja'] .font-display {
+  font-family:
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', var(--font-display), sans-serif;
+}
+
+/* Révélation au scroll (désactivée si reduced-motion) */
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 1s cubic-bezier(0.2, 0.7, 0.1, 1),
+    transform 1s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Entrée du hero au chargement */
+@keyframes togo-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-in {
+  animation: togo-hero-in 1s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-in {
+    animation: none;
+  }
+}
+
+/* Bandeau défilant */
+@keyframes togo-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: togo-marquee 180s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Mot rotatif du hero */
+@keyframes togo-word-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+.word-in {
+  animation: togo-word-in 0.75s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .word-in {
+    animation: none;
+  }
+}
+
+/* ——— Page Expo 2027 Belgrade ———
+   Direction « terrain de jeu » : dégradé irisé en mouvement lent, bandeau
+   signature, flottement de la mascotte. Toutes les animations sont coupées en
+   `prefers-reduced-motion`. */
+@keyframes togo-play-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.play-gradient {
+  background-image: linear-gradient(
+    115deg,
+    #166c54 0%,
+    #006a4e 22%,
+    #ffce00 46%,
+    #d20f34 68%,
+    #006a4e 86%,
+    #166c54 100%
+  );
+  background-size: 320% 320%;
+  animation: togo-play-gradient 26s ease-in-out infinite;
+}
+
+@keyframes togo-play-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.play-marquee {
+  animation: togo-play-marquee 28s linear infinite;
+}
+
+@keyframes togo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.play-float {
+  animation: togo-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play-gradient,
+  .play-marquee,
+  .play-float {
+    animation: none;
+  }
+}
+
+/* Cartes « galets » du terrain de jeu : rayons dissymétriques, comme sur
+   l'habillage d'Expo 2027 Belgrade. */
+.play-blob-1 {
+  border-radius: 46% 54% 52% 48% / 58% 44% 56% 42%;
+}
+.play-blob-2 {
+  border-radius: 56% 44% 48% 52% / 42% 58% 42% 58%;
+}
+.play-blob-3 {
+  border-radius: 48% 52% 58% 42% / 52% 48% 52% 48%;
+}
+
+/* Vidéo de fond des bannières : masquée si l'utilisateur demande moins
+   d'animations, la photo d'affiche prend alors le relais. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
+  }
+}
+
+/* Rideau en diagonale des cartes de talents. Le voile vert balaie la photo du
+   coin bas-gauche vers le haut-droit : le decoupage est un triangle dont le
+   bord de fuite est a 45 degres, et qui passe d'un point a une surface qui
+   deborde largement la carte. Le texte monte ensuite derriere lui, ligne a
+   ligne. Sous `prefers-reduced-motion`, tout apparait d'un coup, sans balayage
+   ni montee. */
+.talent-curtain {
+  clip-path: polygon(0 100%, 0 100%, 0 100%);
+  transition: clip-path 620ms cubic-bezier(0.22, 1, 0.26, 1);
+}
+.group:hover .talent-curtain,
+.group:focus-visible .talent-curtain {
+  clip-path: polygon(0 -150%, 250% 100%, 0 100%);
+}
+
+.talent-line {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 420ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.26, 1);
+}
+.group:hover .talent-line,
+.group:focus-visible .talent-line {
+  opacity: 1;
+  transform: none;
+}
+.talent-line-1 {
+  transition-delay: 250ms;
+}
+.talent-line-2 {
+  transition-delay: 350ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talent-curtain,
+  .talent-line {
+    transition: none;
+  }
+}
+
+/* ===========================================================================
+   DIRECTION ARTISTIQUE — YOKOHAMA 2027, « l'herbier vivant »
+
+   L'exposition de Yokohama est horticole : la page du Togo emprunte son
+   langage a la planche d'herbier. Papier quadrille, numeros de planche,
+   binomes latins, et une regle de mouvement unique — tout pousse. Les
+   elements ne surgissent pas, ils se deplient du bas vers le haut, comme une
+   tige. Les jetons de couleur restent ceux du site (forest, pine, sage, sun,
+   blood) : seule leur proportion change, le vert prenant ici toute la place.
+   =========================================================================== */
+
+/* Feuille d'herbier : papier creme, quadrillage tres pale, et un bord
+   legerement assombri comme une feuille posee a plat sous une vitre. */
+.yk-paper {
+  background-color: #faf8f0;
+  background-image:
+    linear-gradient(rgba(22, 108, 84, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 108, 84, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.yk-paper-dark {
+  background-color: #166c54;
+  background-image:
+    linear-gradient(rgba(214, 228, 221, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(214, 228, 221, 0.055) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* La regle de mouvement : on pousse. L'element se devoile du bas vers le
+   haut par un decoupage qui s'ouvre, et monte legerement en meme temps.
+
+   ATTENTION a l'ordre : l'etat masque n'est PAS l'etat par defaut. Un bloc
+   sans JavaScript, ou dont l'observateur ne repond pas, doit rester visible —
+   sinon la page est blanche. C'est le script qui « arme » l'animation en
+   posant `.yk-armed` au montage, juste avant d'observer ; le masquage ne tient
+   donc que si quelqu'un est la pour le lever. */
+.yk-grow.yk-armed {
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(18px);
+}
+.yk-grow {
+  transition:
+    clip-path 900ms cubic-bezier(0.22, 1, 0.26, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.26, 1);
+}
+.yk-grow.is-in {
+  clip-path: inset(0 0 0 0);
+  transform: none;
+}
+
+/* Le trait qui se trace : tige verticale, soulignement d'un mot, filet d'une
+   legende. Tous partent d'un bord et s'etendent. Meme precaution : le trait
+   est entier tant que le script n'a pas arme l'animation. */
+.yk-draw-y.yk-armed {
+  transform: scaleY(0);
+}
+.yk-draw-y {
+  transform-origin: top;
+  transition: transform 1400ms cubic-bezier(0.22, 1, 0.26, 1);
+}
+.yk-draw-x.yk-armed {
+  transform: scaleX(0);
+}
+.yk-draw-x {
+  transform-origin: left;
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.26, 1);
+}
+.yk-draw-y.is-in,
+.yk-draw-x.is-in {
+  transform: none;
+}
+
+/* Derive tres lente des feuillages du hero : deux couches, deux vitesses, le
+   mouvement est a peine perceptible — une respiration, pas une animation. */
+@keyframes yk-sway {
+  from {
+    transform: translate3d(-1.5%, 0, 0) rotate(-1.2deg);
+  }
+  to {
+    transform: translate3d(1.5%, 0, 0) rotate(1.2deg);
+  }
+}
+.yk-sway {
+  animation: yk-sway 19s ease-in-out infinite alternate;
+}
+.yk-sway-slow {
+  animation: yk-sway 27s ease-in-out infinite alternate-reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yk-grow,
+  .yk-draw-y,
+  .yk-draw-x,
+  .yk-armed {
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+  .yk-sway,
+  .yk-sway-slow {
+    animation: none;
+  }
+}
+
+/* Anneau pointille du portrait d'accueil de Belgrade. L'animation est declaree
+   une fois pour toutes mais mise en pause : elle ne tourne que sous le curseur,
+   donc aucun calcul de composition tant que personne ne survole. */
+@keyframes portrait-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.portrait-ring {
+  animation: portrait-spin 18s linear infinite;
+  animation-play-state: paused;
+}
+.group:hover .portrait-ring {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-ring {
+    animation: none;
+  }
+}
+
+/* Filets qui se tracent a l'entree d'un bloc `Reveal`. Pas de JavaScript : la
+   classe `is-visible` que `Reveal` pose deja sur son conteneur suffit a
+   declencher le trace de ses descendants. */
+.draw-x,
+.draw-y {
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.26, 1) 120ms;
+}
+.draw-x {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.draw-y {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.reveal.is-visible .draw-x,
+.reveal.is-visible .draw-y {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draw-x,
+  .draw-y {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- Participations passees : diaporama de banniere et decouvertes --- */
+
+/* Avancee tres lente de la photo de banniere, dans un sens puis dans l'autre
+   d'une photo a la suivante. `forwards` : la photo reste a sa position finale
+   pendant le fondu vers la suivante, sans a-coup. */
+@keyframes kenburns-a {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+@keyframes kenburns-b {
+  from {
+    transform: scale(1.12) translate3d(1.5%, 0, 0);
+  }
+  to {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+.kenburns-a {
+  animation: kenburns-a 8s ease-out forwards;
+}
+.kenburns-b {
+  animation: kenburns-b 8s ease-out forwards;
+}
+
+/* Le trait de la photo en cours se remplit sur la duree de la pose. */
+@keyframes slide-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.slide-fill {
+  animation: slide-fill 6s linear forwards;
+}
+
+/* Photographie qui se decouvre de haut en bas a l'entree de son bloc `Reveal`. */
+.wipe {
+  clip-path: inset(0 0 100% 0 round 24px);
+  transition: clip-path 1100ms cubic-bezier(0.22, 1, 0.26, 1) 150ms;
+}
+.reveal.is-visible .wipe {
+  clip-path: inset(0 0 0 0 round 24px);
+}
+
+/* L'invite a defiler, en bas de la banniere. */
+@keyframes scroll-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(7px);
+    opacity: 0.45;
+  }
+}
+.scroll-cue {
+  animation: scroll-cue 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kenburns-a,
+  .kenburns-b,
+  .slide-fill,
+  .scroll-cue {
+    animation: none;
+  }
+  .wipe {
+    clip-path: none;
+    transition: none;
+  }
+}
+
+@keyframes title-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.title-rule::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -0.06em;
+  left: 0;
+  height: 0.07em;
+  background: #ffce00;
+  transform-origin: left;
+  animation: title-rule 900ms cubic-bezier(0.22, 1, 0.26, 1) 300ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-rule::after {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* Accueil, « Le Togo sur la scène internationale » : la carte d'informations
+   de l'événement actif glisse depuis la gauche, puis ses éléments montent un à
+   un (étiquettes, titre, thème, ville et dates, compte à rebours, texte,
+   bouton). La classe est posée seulement sur la carte visible : à chaque
+   changement de slide, l'animation repart. */
+@keyframes ev-card-in {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ev-item-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.ev-in {
+  animation: ev-card-in 0.75s cubic-bezier(0.22, 1, 0.26, 1) both;
+}
+.ev-in > * {
+  animation: ev-item-in 0.65s cubic-bezier(0.22, 1, 0.26, 1) both;
+}
+.ev-in > :nth-child(1) { animation-delay: 0.12s; }
+.ev-in > :nth-child(2) { animation-delay: 0.2s; }
+.ev-in > :nth-child(3) { animation-delay: 0.28s; }
+.ev-in > :nth-child(4) { animation-delay: 0.36s; }
+.ev-in > :nth-child(5) { animation-delay: 0.44s; }
+.ev-in > :nth-child(6) { animation-delay: 0.52s; }
+/* Tuiles du compte à rebours : petit rebond en cascade. */
+.ev-in [role='timer'] > * {
+  animation: ev-item-in 0.5s cubic-bezier(0.22, 1, 0.26, 1) both;
+}
+.ev-in [role='timer'] > :nth-child(1) { animation-delay: 0.5s; }
+.ev-in [role='timer'] > :nth-child(3) { animation-delay: 0.58s; }
+.ev-in [role='timer'] > :nth-child(5) { animation-delay: 0.66s; }
+.ev-in [role='timer'] > :nth-child(7) { animation-delay: 0.74s; }
+@media (prefers-reduced-motion: reduce) {
+  .ev-in,
+  .ev-in > *,
+  .ev-in [role='timer'] > * {
+    animation: none;
+  }
+}
+
+/* Archives, frise : la fiche de la participation en lumière se renouvelle en
+   fondu montant à chaque changement (clé React). */
+@keyframes frise-card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.frise-card {
+  animation: frise-card-in 0.6s cubic-bezier(0.22, 1, 0.26, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frise-card { animation: none; }
+}
