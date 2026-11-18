@@ -4,8 +4,8 @@ Tout tourne sur le serveur, dans Docker :
 
 | Adresse | Service |
 |---|---|
-| `togoexpo.tg` (`www.` y redirige) | Le site Next.js |
-| `cms.togoexpo.tg` | WordPress : administration, API GraphQL, médias. Les autres adresses redirigent vers le site. |
+| `togoexpo.org` (`www.` y redirige) | Le site Next.js |
+| `cms.togoexpo.org` | WordPress : administration, API GraphQL, médias. Les autres adresses redirigent vers le site. |
 
 Caddy obtient et renouvelle les certificats HTTPS tout seul. Le site lit WordPress
 par le réseau interne du serveur, et WordPress prévient le site à chaque
@@ -36,19 +36,20 @@ ssh root@IP 'bash -s' < deploy/scripts/server-setup.sh
 Installe Docker, le pare-feu (seuls SSH, HTTP et HTTPS ouverts), les mises à
 jour de sécurité automatiques, et crée l'utilisateur `deploy` qui servira ensuite.
 
-## 3. DNS : le CMS et une préproduction (zone DNS chez Hosteur)
-
-Ajoutez deux enregistrements **A** vers `IP` :
+## 3. DNS (zone de `togoexpo.org` chez Hostinger, hPanel › Domaines › DNS)
 
 | Nom | Type | Valeur |
 |---|---|---|
+| `@` | A | IP |
+| `www` | CNAME | `togoexpo.org` (ou A vers IP) |
 | `cms` | A | IP |
-| `preprod` | A | IP |
-| `www.preprod` | A | IP |
 
-Profitez-en pour baisser à 300 secondes le TTL des enregistrements `@` et `www`
-(ils changeront au jour J). **Ne touchez pas aux enregistrements MX et TXT** :
-ce sont les e-mails `@togoexpo.tg`.
+Supprimez tout enregistrement **AAAA** sur ces noms (sinon Let's Encrypt échoue).
+Ne touchez pas aux enregistrements MX et TXT s'il y a une messagerie sur le domaine.
+
+Tant que le DNS n'est pas prêt, on peut travailler sur des adresses provisoires
+qui pointent d'elles-mêmes vers le serveur : `togoexpo.IP-EN-TIRETS.sslip.io` et
+`cms.IP-EN-TIRETS.sslip.io` (par exemple `togoexpo.2-25-13-143.sslip.io`).
 
 ## 4. Premier envoi et réglages
 
@@ -65,7 +66,8 @@ cp .env.example .env
 nano .env
 ```
 
-- `SITE_DOMAIN=preprod.togoexpo.tg` pour l'instant (on passera à `togoexpo.tg` au jour J).
+- `SITE_DOMAIN` / `CMS_DOMAIN` : `togoexpo.org` / `cms.togoexpo.org`, ou les adresses
+  provisoires `sslip.io` si le DNS n'est pas encore prêt (voir étape 8).
 - Chaque `change_me` : une valeur aléatoire, générée avec
   `openssl rand -base64 33 | tr -d '/+=' | cut -c1-40`.
 - `RESEND_API_KEY` : la clé Resend du formulaire de contact (déjà utilisée sur Vercel).
@@ -80,7 +82,7 @@ ssh deploy@IP 'cd /opt/togoexpo/deploy && sh scripts/wp-init.sh'
 ```
 
 WordPress en français, WPGraphQL, Polylang (FR par défaut, EN, JA), permaliens.
-L'administration répond sur `https://cms.togoexpo.tg/wp-admin`.
+L'administration répond sur `https://cms.togoexpo.org/wp-admin`.
 
 ## 6. Le contenu (dans cet ordre)
 
@@ -110,32 +112,35 @@ doivent pas être publiés. Seul le compte administrateur de `deploy/.env` est c
 Les articles gardent leur adresse : les redirections de l'ancien site
 (`/ancien-article` → `/fr/actualites/ancien-article`) fonctionnent d'elles-mêmes.
 
-## 7. Construire le site et tester la préproduction
+## 7. Construire le site et le tester
 
 ```bash
 SERVER=deploy@IP sh deploy/push.sh
 ```
 
-À vérifier sur `https://preprod.togoexpo.tg` :
+À vérifier sur `https://togoexpo.org` :
 - les pages, les éditions, les actualités et leurs images ;
-- publier un article de test dans `cms.togoexpo.tg` : il apparaît sur la préproduction dans la seconde ;
+- publier un article de test dans `cms.togoexpo.org` : il apparaît sur le site dans la seconde ;
 - le formulaire de contact.
 
-## 8. Jour J : bascule du domaine
+## 8. Changer de domaine (adresses provisoires -> définitives, par exemple)
 
-1. Zone DNS Hosteur : `@` en **A** vers `IP`, `www` en **A** vers `IP` (supprimez
-   l'éventuel CNAME `www`). Rien d'autre.
-2. Une fois que `dig +short togoexpo.tg` et `dig +short cms.togoexpo.tg` donnent `IP` :
+1. Faire pointer les nouveaux noms vers `IP` (voir étape 3).
+2. Une fois que `dig +short togoexpo.org` et `dig +short cms.togoexpo.org` donnent `IP` :
    ```bash
-   ssh deploy@IP 'cd /opt/togoexpo/deploy && sh scripts/set-domains.sh togoexpo.tg cms.togoexpo.tg'
+   ssh deploy@IP 'cd /opt/togoexpo/deploy && sh scripts/set-domains.sh togoexpo.org cms.togoexpo.org'
    ```
    Le script met à jour les réglages, réécrit les adresses des images dans
    WordPress, reconstruit le site et obtient les certificats.
-3. Vérifier `https://togoexpo.tg`, `https://www.togoexpo.tg` (redirection),
-   une ancienne adresse (`https://togoexpo.tg/devenir-sponsor`) et l'envoi d'un e-mail vers `@togoexpo.tg`.
-4. Google Search Console : soumettre `https://togoexpo.tg/sitemap.xml`.
-5. Dans 2 à 4 semaines, supprimer l'ancien site chez Hosteur (gardez sa sauvegarde),
-   le projet Vercel et l'enregistrement `preprod`.
+3. Vérifier `https://togoexpo.org`, `https://www.togoexpo.org` (redirection) et
+   `https://cms.togoexpo.org/wp-admin`.
+4. Google Search Console : soumettre `https://togoexpo.org/sitemap.xml`.
+
+**Ancien domaine `togoexpo.tg`** : pour le rediriger vers `togoexpo.org`, faire
+pointer ses enregistrements `@` et `www` vers `IP`, puis ajouter au `Caddyfile`
+un bloc `togoexpo.tg, www.togoexpo.tg { redir https://{$SITE_DOMAIN}{uri} permanent }`.
+Les anciennes adresses d'articles (`/ancien-article`) sont ensuite redirigées par le site.
+Ensuite seulement, supprimer l'ancien site chez Hosteur (gardez sa sauvegarde) et le projet Vercel.
 
 ## 9. Sauvegardes (une fois)
 
@@ -187,7 +192,7 @@ de `~deploy/.ssh/authorized_keys`.
 ## En cas de problème
 
 - **Pas de certificat HTTPS** : le domaine ne pointe pas encore vers le serveur
-  (`dig +short cms.togoexpo.tg`). Caddy réessaie tout seul ; journal : `docker compose logs caddy`.
+  (`dig +short cms.togoexpo.org`). Caddy réessaie tout seul ; journal : `docker compose logs caddy`.
 - **Un article publié n'apparaît pas** : `sh scripts/revalidate.sh`. Sinon, il
   apparaît de toute façon en moins de 5 minutes.
 - **« Mot de passe oublié » ne part pas** : WordPress n'a pas d'envoi d'e-mails

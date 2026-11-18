@@ -2,7 +2,7 @@
 # Change les domaines du site et du CMS (adresse provisoire -> définitive, par exemple).
 # Sur le serveur, dans deploy/ :
 #   sh scripts/set-domains.sh <domaine du site> <domaine du CMS>
-#   sh scripts/set-domains.sh togoexpo.tg cms.togoexpo.tg
+#   sh scripts/set-domains.sh togoexpo.org cms.togoexpo.org
 #
 # Met à jour deploy/.env, réécrit dans la base WordPress les adresses de
 # l'ancien domaine du CMS (images des contenus), puis reconstruit le front et

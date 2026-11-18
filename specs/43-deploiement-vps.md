@@ -10,7 +10,7 @@ Nouveau serveur (VPS nu, Ubuntu/Debian). Le site Next.js et le WordPress headles
 - `wp/mu-plugins/togoexpo-revalidate.php` : la version corrigée de la spec 42, branchée en interne (`http://front:3000`).
 - Scripts : `server-setup.sh`, `push.sh`, `wp-init.sh`, `migrate-local-content.sh` + `import-local.sh`, `wp-import.sh`, `revalidate.sh`, `backup.sh`.
 
-- Serveur `2.25.13.143` (Ubuntu 26.04) en service le 18/11/2026. Adresses provisoires en attendant le DNS : `togoexpo.2-25-13-143.sslip.io`, `cms.2-25-13-143.sslip.io` (`scripts/set-domains.sh` pour passer aux domaines définitifs).
+- Serveur `2.25.13.143` (Ubuntu 26.04) en service le 18/11/2026. D'abord sur les adresses provisoires `togoexpo.2-25-13-143.sslip.io` / `cms.2-25-13-143.sslip.io`, puis passé le jour même sur le nouveau domaine `togoexpo.org` / `cms.togoexpo.org` (zone DNS chez Hostinger, `scripts/set-domains.sh togoexpo.org cms.togoexpo.org`). L'ancien `togoexpo.tg` reste sur l'ancien site en attendant sa redirection.
 - CI/CD : dépôt privé `Jeanpierregaba/togoexpo`, `.github/workflows/deploy.yml` (typecheck + lint, puis `deploy/push.sh` par une clé SSH dédiée).
 
 ## Vérif
