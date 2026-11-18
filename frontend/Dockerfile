@@ -29,6 +29,8 @@ ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0
 RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
 COPY --from=build /app/public ./public
+# Les fichiers gardent les droits du poste d'où ils sont envoyés : tout rendre lisible.
+RUN chmod -R a+rX public
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Dossier du cache ISR, monté en volume : il doit appartenir à l'utilisateur du serveur.
