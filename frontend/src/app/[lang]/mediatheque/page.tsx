@@ -1,15 +1,11 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MediathequeGallery } from '@/components/MediathequeGallery';
-import { toMediaItems, type HomeQuery } from '@/lib/mappers';
-import { wpQuery } from '@/lib/wp';
-import { GET_HOME } from '@/graphql/queries';
-import { getDictionary } from '@/i18n/dict';
-import { isLang, langAlternates, lz, toLang, wpLanguage, type Lang } from '@/i18n/lang';
+import { FlickrGallery } from '@/components/FlickrGallery';
 import { SectionKicker } from '@/components/SectionKicker';
-
-export const revalidate = 300;
+import { FLICKR_PHOTOS, FLICKR_URL } from '@/lib/flickr';
+import { getDictionary } from '@/i18n/dict';
+import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
 
 type Props = { params: { lang: string } };
 
@@ -23,24 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function getMedia(lang: Lang) {
-  const t = getDictionary(lang);
-  try {
-    const res = await wpQuery<HomeQuery>(GET_HOME, { first: 100, language: wpLanguage(lang) });
-    return toMediaItems(res.editions?.nodes, res.posts?.nodes, {
-      pavillonOf: t.media.pavillonOf,
-      actusLabel: t.media.actusLabel,
-    });
-  } catch {
-    return [];
-  }
-}
-
-export default async function MediathequePage({ params }: Props) {
+/**
+ * Médiathèque : toute la banque d'images Flickr de TogoExpo. La liste des
+ * photos est relevée par `npm run flickr` (src/data/flickr.json) ; les images
+ * elles-mêmes restent servies par Flickr.
+ */
+export default function MediathequePage({ params }: Props) {
   if (!isLang(params.lang)) notFound();
   const lang = params.lang;
   const t = getDictionary(lang);
-  const items = await getMedia(lang);
+  const photos = FLICKR_PHOTOS;
+
   return (
     <>
       {/* Bannière : une photographie de la médiathèque sous un voile neutre. */}
@@ -55,26 +44,54 @@ export default async function MediathequePage({ params }: Props) {
             <span aria-hidden="true">/</span> {t.media.crumb}
           </p>
           <SectionKicker tone="dark" className="mb-6 mt-10">{t.media.kicker}</SectionKicker>
-          <h1
-            id="media-hero-title"
-            className="m-0 font-display text-[clamp(40px,6vw,75px)] font-semibold leading-[0.95] tracking-[-0.04em]"
-          >
+          <h1 id="media-hero-title" className="m-0 font-display text-[clamp(40px,6vw,75px)] font-semibold leading-[0.95] tracking-[-0.04em]">
             {t.media.h1}
           </h1>
           <p className="mb-0 mt-6 max-w-[62ch] text-[clamp(16px,1.4vw,20px)] leading-relaxed text-mist">
             {t.media.para}
-            {items.length > 0 && (
+            {photos.length > 0 && (
               <>
-                {' '}— <span className="font-semibold text-sun">{items.length} {t.media.photos}</span>
+                {' '}— <span className="font-semibold text-sun">{photos.length} {t.media.photos}</span>
               </>
             )}
             .
           </p>
+          <a
+            href={FLICKR_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex rounded-full border border-cream/35 px-6 py-3 text-sm font-semibold text-cream transition-colors hover:border-sun hover:text-sun"
+          >
+            {t.media.flickrCta}
+          </a>
         </div>
       </section>
+
       <section aria-label={t.media.h1} className="bg-cream px-5 py-[100px] text-forest sm:px-8 lg:px-14">
         <div className="mx-auto max-w-[1360px]">
-          <MediathequeGallery items={items} lang={lang} />
+          {photos.length === 0 ? (
+            <div className="rounded-[28px] border border-dashed border-forest/30 p-10 text-center">
+              <p className="m-0 font-display text-2xl font-semibold">{t.media.emptyTitle}</p>
+              <p className="mx-auto mb-0 mt-3 max-w-[60ch] leading-relaxed text-[#42574C]">{t.media.emptyPara}</p>
+            </div>
+          ) : (
+            <FlickrGallery
+              photos={photos}
+              labels={{
+                all: t.media.all,
+                filterAria: t.media.filterAria,
+                more: t.media.more,
+                shown: t.media.shown,
+                photos: t.media.photos,
+                view: t.media.viewAria,
+                close: t.media.close,
+                prev: t.media.prev,
+                next: t.media.next,
+                onFlickr: t.media.onFlickr,
+              }}
+            />
+          )}
+          <p className="mb-0 mt-10 text-sm text-forest/60">{t.media.credit}</p>
         </div>
       </section>
     </>

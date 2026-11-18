@@ -37,7 +37,7 @@ function archivesMenu(lang: Lang) {
 function isActiveLink(pathname: string, href: string): boolean {
   const clean = pathname.replace(/^\/(fr|en|ja)/, '') || '/';
   if (href === '/#top' || href === '/') return clean === '/';
-  if (href === '/archives') return clean.startsWith('/editions');
+  if (href === '/archives') return clean.startsWith('/editions') || clean.startsWith('/mediatheque');
   return clean === href || clean.startsWith(`${href}/`);
 }
 
@@ -151,6 +151,19 @@ export function SiteHeader({ lang }: { lang: Lang }) {
                           </li>
                         ))}
                       </ul>
+                      {/* La médiathèque, juste après les éditions passées. */}
+                      <div className="border-t border-forest/10 p-3">
+                        <a
+                          href={lz('/mediatheque', lang)}
+                          className="group flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 transition-colors hover:bg-sun/40"
+                        >
+                          <span>
+                            <span className="block font-display text-[17px] font-semibold leading-tight">{t.archivesMenu.media}</span>
+                            <span className="mt-0.5 block text-sm text-[#42574C]">{t.archivesMenu.mediaNote}</span>
+                          </span>
+                          <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -206,6 +219,11 @@ export function SiteHeader({ lang }: { lang: Lang }) {
                         </a>
                       </li>
                     ))}
+                    <li>
+                      <a href={lz('/mediatheque', lang)} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-cream/80 transition-colors hover:bg-white/10 hover:text-cream">
+                        {t.archivesMenu.media}
+                      </a>
+                    </li>
                   </ul>
                 )}
               </li>

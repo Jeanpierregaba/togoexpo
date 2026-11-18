@@ -71,14 +71,6 @@ export type PostListItem = {
 
 export type PostDetail = PostListItem & { content: string };
 
-export type MediaItem = {
-  src: string;
-  alt: string;
-  title: string;
-  editionSlug: string | null;
-  editionLabel: string;
-};
-
 export function stripTags(html: string): string {
   return html
     .replace(/<[^>]*>/g, ' ')
@@ -141,42 +133,6 @@ export function mapPostDetail(p: WPPostNode): PostDetail | null {
     readingMinutes: readingMinutesOf(`${p.title ?? ''} ${p.content ?? ''}`),
     content: p.content ?? '',
   };
-}
-
-// Médiathèque = images mises en avant des éditions + des actus.
-// Règle : pas d'image WP -> pas de carte (jamais de placeholder externe).
-export function toMediaItems(
-  editions: WPEditionNode[] | undefined,
-  posts: WPPostNode[] | undefined,
-  labels: { pavillonOf: string; actusLabel: string } = { pavillonOf: 'Pavillon du Togo — ', actusLabel: 'Actualités' },
-): MediaItem[] {
-  const fromEditions: MediaItem[] = (editions ?? []).flatMap((e) => {
-    const img = toImage(
-      e.featuredImage,
-      `${e.editionFields?.ville ?? ''} ${e.editionFields?.annee ?? ''}`,
-    );
-    if (!img || !e.slug) return [];
-    const f = e.editionFields;
-    return [{
-      src: img.src,
-      alt: img.alt,
-      title: `${labels.pavillonOf}${f?.ville ?? ''} ${f?.annee ?? ''}`.trim(),
-      editionSlug: e.slug,
-      editionLabel: `${f?.ville ?? ''} ${f?.annee ?? ''}`.trim(),
-    }];
-  });
-  const fromPosts: MediaItem[] = (posts ?? []).flatMap((p) => {
-    const img = toImage(p.featuredImage, p.title);
-    if (!img) return [];
-    return [{
-      src: img.src,
-      alt: img.alt,
-      title: stripTags(p.title ?? ''),
-      editionSlug: null,
-      editionLabel: labels.actusLabel,
-    }];
-  });
-  return [...fromEditions, ...fromPosts];
 }
 
 export function mapEditionNode(n: WPEditionNode): Edition | null {

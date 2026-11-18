@@ -13,6 +13,8 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' },
       { protocol: 'https', hostname: 'togoexpo.tg' },
       { protocol: 'https', hostname: 'cms.togoexpo.tg' },
+      // Banque d'images Flickr (page Médiathèque).
+      { protocol: 'https', hostname: 'live.staticflickr.com' },
       ...(WP_HOST && WP_HOST !== 'cms.togoexpo.tg' ? [{ protocol: 'https', hostname: WP_HOST }] : []),
     ]
   },

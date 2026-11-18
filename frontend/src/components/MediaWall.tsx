@@ -36,9 +36,7 @@ export function MediaWall({ lang }: { lang: Lang }) {
           <Reveal>
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://www.flickr.com/photos/190367340@N06/"
-                target="_blank"
-                rel="noreferrer"
+                href={href}
                 className="inline-flex gap-2.5 rounded-full bg-forest px-6 py-3.5 font-semibold text-cream transition-colors hover:bg-pine"
               >
                 {t.mediaWall.gallery}
