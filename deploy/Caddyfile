@@ -7,6 +7,9 @@
 # Le site public.
 {$SITE_DOMAIN} {
 	encode zstd gzip
+	# L'administration WordPress est sur le CMS : on y renvoie les anciennes adresses.
+	@admin path /wp-admin /wp-admin/* /wp-login.php
+	redir @admin https://{$CMS_DOMAIN}{uri} 302
 	reverse_proxy front:3000
 }
 
