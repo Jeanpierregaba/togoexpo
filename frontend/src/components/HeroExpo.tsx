@@ -85,11 +85,11 @@ export function HeroExpo({ lang, children }: { lang: Lang; children?: React.Reac
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 via-[38%] to-black/75 to-[85%]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/5 via-[40%] to-black/60 to-[90%]" />
       </div>
 
       <div className="relative flex flex-1 flex-col justify-end px-5 pb-8 pt-36 sm:px-8 lg:px-14 lg:pb-14">
-      <div className="hero-in mx-auto w-full max-w-[1360px]">
+      <div className="hero-in mx-auto w-full max-w-[1360px] [text-shadow:0_1px_14px_rgba(0,0,0,0.45)]">
         <div className="mb-7 flex flex-wrap gap-2.5 font-mono text-xs uppercase tracking-[0.08em]">
           <span className="rounded-full bg-blood px-3 py-1.5 text-white">{t.hero.badge}</span>
         </div>
