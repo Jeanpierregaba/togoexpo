@@ -11,7 +11,7 @@ X…) affiche un vrai aperçu.
 ## Fait
 - `frontend/scripts/og-image.mjs` (`npm run og`) : images 1200 × 630 dans
   `public/og/togoexpo-{fr,en,ja}.jpg` (photo Woezon, voile, logo, accroche
-  « Le Togo s'expose au monde » traduite, togoexpo.org, liseré aux couleurs du drapeau).
+  « Une ambition sans frontières » (traduite), togoexpo.org, liseré aux couleurs du drapeau).
   `opengraph-image.tsx` supprimé.
 - `src/lib/share.ts` : `withShare(lang, meta, opts)` ajoute `openGraph` et `twitter`
   (titre « … | TogoExpo », description, URL canonique, image) à chaque page.

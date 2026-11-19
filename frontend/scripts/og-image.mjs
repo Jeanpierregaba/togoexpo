@@ -19,9 +19,9 @@ const PHOTO = root('public/design/hero-togo-expo.jpg');
 const LOGO = root('public/design/logo-togoexpo.webp');
 
 const TEXT = {
-  fr: { kicker: 'EXPOSITIONS UNIVERSELLES · FOIRES INTERNATIONALES', title: ['Le Togo s’expose', 'au monde'] },
-  en: { kicker: 'WORLD EXPOS · INTERNATIONAL FAIRS', title: ['Togo on show', 'to the world'] },
-  ja: { kicker: '万国博覧会 · 国際見本市', title: ['世界に発信する', 'トーゴ'] },
+  fr: { kicker: 'EXPOSITIONS UNIVERSELLES · FOIRES INTERNATIONALES', title: ['Une ambition', 'sans frontières'] },
+  en: { kicker: 'WORLD EXPOS · INTERNATIONAL FAIRS', title: ['An ambition', 'without borders'] },
+  ja: { kicker: '万国博覧会 · 国際見本市', title: ['国境なき', '志'] },
 };
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

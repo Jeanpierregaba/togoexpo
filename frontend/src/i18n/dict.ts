@@ -16,7 +16,7 @@ const fr = {
     homeTitle: 'TogoExpo — Le Togo aux Expositions universelles et foires internationales',
     homeDesc:
       'Portail officiel du Comité National Permanent chargé de la participation du Togo aux Expositions et Foires Internationales : calendrier, pavillons, culture, tourisme et opportunités d’investissement.',
-    ogTitle: 'TogoExpo — Le Togo s’expose au monde',
+    ogTitle: 'TogoExpo — Une ambition sans frontières',
     ogDesc:
       'Calendrier des expositions et foires où le Togo est présent, pavillons nationaux, culture, tourisme et économie togolaise.',
     ogKicker: 'EXPOSITIONS UNIVERSELLES',
@@ -1527,7 +1527,7 @@ const en: Dict = {
     homeTitle: 'TogoExpo — Togo at World Expos and international fairs',
     homeDesc:
       'Official portal of the Permanent National Committee in charge of Togo’s participation in International Exhibitions and Fairs: calendar, pavilions, culture, tourism and investment opportunities.',
-    ogTitle: 'TogoExpo — Togo on show to the world',
+    ogTitle: 'TogoExpo — An ambition without borders',
     ogDesc:
       'Calendar of exhibitions and fairs where Togo is present, national pavilions, Togolese culture, tourism and economy.',
     ogKicker: 'WORLD EXPOSITIONS',
@@ -3042,7 +3042,7 @@ const ja: Dict = {
     homeTitle: 'TogoExpo — 万国博覧会と国際見本市におけるトーゴ',
     homeDesc:
       'トーゴの万博・国際見本市への参加を担う常設国家委員会の公式ポータル。スケジュール、パビリオン、文化、観光、投資機会を紹介します。',
-    ogTitle: 'TogoExpo — 世界に発信するトーゴ',
+    ogTitle: 'TogoExpo — 国境なき志',
     ogDesc: 'トーゴが参加する博覧会・見本市の予定、ナショナルパビリオン、文化、観光、トーゴ経済。',
     ogKicker: '国際博覧会',
     ogTagline: '国際博覧会におけるトーゴ',
