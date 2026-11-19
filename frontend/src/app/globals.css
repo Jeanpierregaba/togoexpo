@@ -547,17 +547,3 @@ html[lang='ja'] .font-display {
   .frise-card { animation: none; }
 }
 
-/* Page 404 : anneau « Vous êtes ici » qui tourne lentement */
-@keyframes togo-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.spin-slow {
-  animation: togo-spin 40s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .spin-slow {
-    animation: none;
-  }
-}
