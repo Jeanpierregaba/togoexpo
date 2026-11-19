@@ -15,6 +15,7 @@ import { wpQuery } from '@/lib/wp';
 import { GET_HOME } from '@/graphql/queries';
 import { getDictionary } from '@/i18n/dict';
 import { baseSlug, isLang, langAlternates, wpLanguage, type Lang } from '@/i18n/lang';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -23,11 +24,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = isLang(params.lang) ? params.lang : 'fr';
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.meta.homeTitle,
     description: t.meta.homeDesc,
     alternates: langAlternates('/', lang),
-  };
+  }, { title: t.meta.ogTitle, description: t.meta.ogDesc });
 }
 
 const MOCK_BY_LANG = {

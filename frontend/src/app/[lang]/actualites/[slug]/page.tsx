@@ -11,6 +11,7 @@ import { ActuCard } from '@/components/ActuCard';
 import { JsonLd } from '@/components/JsonLd';
 import { Reveal } from '@/components/Reveal';
 import { AccentTitle } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -50,11 +51,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const post = await getPost(params.slug);
   if (!post) return { title: getDictionary(lang).notFound.h1 };
-  return {
+  return withShare(lang, {
     title: post.title,
     description: post.excerpt.slice(0, 150),
     alternates: slugAlternates('/actualites', params.slug, lang),
-  };
+  }, { image: post.image });
 }
 
 export default async function ActuPage({ params }: Props) {

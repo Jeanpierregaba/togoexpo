@@ -8,6 +8,7 @@ import { TogoMap } from '@/components/TogoMap';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -16,11 +17,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = isLang(params.lang) ? params.lang : 'fr';
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.togo.heroTitle.replace(/[.。]$/, ''),
     description: t.togo.heroSub,
     alternates: langAlternates('/togo', lang),
-  };
+  });
 }
 
 const SPOTS = [

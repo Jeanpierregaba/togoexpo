@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { ArchiveEdition } from '@/components/ArchiveEdition';
 import { ARCHIVES, archiveContent, isArchiveSlug } from '@/lib/archives';
 import { Reveal } from '@/components/Reveal';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -66,19 +67,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const archive = baseSlug(params.slug);
   if (isArchiveSlug(archive)) {
     const c = archiveContent(archive, lang);
-    return {
+    return withShare(lang, {
       title: `${c.city} ${ARCHIVES[archive].year}`,
       description: c.lead,
       alternates: slugAlternates('/editions', params.slug, lang),
-    };
+    }, { image: { src: ARCHIVES[archive].image, alt: ARCHIVES[archive].imageAlt } });
   }
   const edition = await getEdition(params.slug, lang);
   if (!edition) return { title: t.notFound.h1 };
-  return {
+  return withShare(lang, {
     title: `${edition.ville} ${edition.annee}`,
     description: `${edition.theme} — ${t.editionDetail.leadPrefix}${edition.ville} (${edition.pays}).`,
     alternates: slugAlternates('/editions', params.slug, lang),
-  };
+  });
 }
 
 export default async function EditionPage({ params }: Props) {

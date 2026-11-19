@@ -9,6 +9,7 @@ import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz } from '@/i18n/lang';
 import { PARTICIPATIONS } from '@/lib/participations';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -17,11 +18,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = isLang(params.lang) ? params.lang : 'fr';
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.about.metaTitle,
     description: t.about.metaDesc,
     alternates: langAlternates('/a-propos', lang),
-  };
+  });
 }
 
 const PAD = 'px-5 sm:px-8 lg:px-14';

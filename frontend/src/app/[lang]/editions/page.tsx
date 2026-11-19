@@ -9,6 +9,7 @@ import { CountUp, HeroSlides } from '@/components/ArchiveMotion';
 import { PARTICIPATIONS, type Participation } from '@/lib/participations';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, langSlug, lz, toLang, type Lang } from '@/i18n/lang';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -17,11 +18,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const a = getDictionary(lang).archivePage;
-  return {
+  return withShare(lang, {
     title: `${a.crumb} — ${a.h1}`,
     description: a.lead,
     alternates: langAlternates('/editions', lang),
-  };
+  });
 }
 
 const PAD = 'px-5 sm:px-8 lg:px-14';

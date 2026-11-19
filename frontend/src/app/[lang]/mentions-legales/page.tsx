@@ -2,17 +2,18 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, toLang } from '@/i18n/lang';
+import { withShare } from '@/lib/share';
 
 type Props = { params: { lang: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.legal.title,
     description: t.legal.desc,
     alternates: langAlternates('/mentions-legales', lang),
-  };
+  });
 }
 
 export default function MentionsLegales({ params }: Props) {

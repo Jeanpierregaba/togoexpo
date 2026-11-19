@@ -40,8 +40,15 @@ export async function generateMetadata({ params }: { params: { lang: string } })
       type: 'website',
       title: t.meta.ogTitle,
       description: t.meta.ogDesc,
+      url: `${siteUrl()}/${lang}`,
+      images: [{ url: `/og/togoexpo-${lang}.jpg`, width: 1200, height: 630, alt: t.meta.ogTitle }],
     },
-    twitter: { card: 'summary_large_image' },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.meta.ogTitle,
+      description: t.meta.ogDesc,
+      images: [`/og/togoexpo-${lang}.jpg`],
+    },
     robots: { index: true, follow: true },
   };
 }

@@ -6,17 +6,18 @@ import { SectionKicker } from '@/components/SectionKicker';
 import { FLICKR_PHOTOS, FLICKR_URL } from '@/lib/flickr';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
+import { withShare } from '@/lib/share';
 
 type Props = { params: { lang: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.media.h1,
     description: t.media.para,
     alternates: langAlternates('/mediatheque', lang),
-  };
+  });
 }
 
 /**

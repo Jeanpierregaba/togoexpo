@@ -12,6 +12,7 @@ import { BELGRADE_IMG, BELGRADE_OFFICIAL_URL, BELGRADE_OPENING, BELGRADE_PRESS_D
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang, type Lang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -20,11 +21,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: `${t.belgrade.heroTitle} — ${t.belgrade.crumb}`,
     description: t.belgrade.heroLead,
     alternates: langAlternates('/editions/belgrade-2027', lang),
-  };
+  });
 }
 
 const PAD = 'px-5 sm:px-8 lg:px-14';

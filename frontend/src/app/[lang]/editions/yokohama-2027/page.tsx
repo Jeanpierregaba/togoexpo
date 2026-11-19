@@ -11,6 +11,7 @@ import { YOKOHAMA_BROCHURES, YOKOHAMA_IMG, YOKOHAMA_LATIN, YOKOHAMA_OPENING } fr
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -19,11 +20,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: `${t.yokohama.heroTitleA} ${t.yokohama.heroTitleB} — ${t.yokohama.crumb}`,
     description: t.yokohama.heroLead,
     alternates: langAlternates('/editions/yokohama-2027', lang),
-  };
+  });
 }
 
 /**

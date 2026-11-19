@@ -10,6 +10,7 @@ import { FeaturedActu } from '@/components/FeaturedActu';
 import { PageHero } from '@/components/PageHero';
 import { Reveal } from '@/components/Reveal';
 import { SectionKicker } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
 
@@ -18,11 +19,11 @@ type Props = { params: { lang: string } };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: t.actusIdx.h1,
     description: t.actusIdx.para,
     alternates: langAlternates('/actualites', lang),
-  };
+  });
 }
 
 async function getPosts(lang: Lang) {

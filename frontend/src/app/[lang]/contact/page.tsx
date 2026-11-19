@@ -6,17 +6,18 @@ import { USEFUL_LINKS } from '@/lib/design';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
+import { withShare } from '@/lib/share';
 
 type Props = { params: { lang: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = toLang(params.lang);
   const t = getDictionary(lang);
-  return {
+  return withShare(lang, {
     title: `${t.contact.crumb} — ${t.contact.h1.replace(/[.。]$/, '')}`,
     description: t.contact.para,
     alternates: langAlternates('/contact', lang),
-  };
+  });
 }
 
 const ICON = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;

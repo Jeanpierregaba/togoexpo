@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen --config codegen.ts",
     "flickr": "node scripts/flickr-sync.mjs",
+    "og": "node scripts/og-image.mjs",
     "audit": "npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
