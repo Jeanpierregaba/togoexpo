@@ -35,7 +35,34 @@ ssh "$SERVER" "test -f '$DIR/deploy/.env'" || {
 }
 
 echo "== Build et redémarrage =="
-ssh "$SERVER" "cd '$DIR/deploy' && docker compose up -d --build --remove-orphans && docker image prune -f >/dev/null"
+# Les images sont construites d'abord, pendant que l'ancien site tourne encore.
+# Compose échoue parfois en recréant un conteneur (« container name … already in
+# use » sur un nom temporaire `<id>_togoexpo-prod-…`) alors que le nouveau démarre
+# bien. On nettoie ces restes et on relance une fois, puis on vérifie que chaque
+# service tourne sur sa dernière image.
+ssh "$SERVER" "DIR='$DIR' sh -s" <<'REMOTE'
+set -eu
+cd "$DIR/deploy"
+docker compose build
+if ! docker compose up -d --remove-orphans; then
+  echo "Compose a échoué au redémarrage : nettoyage puis seconde tentative."
+  sleep 3
+  docker ps -a --format '{{.Names}}' | grep -E '^[0-9a-f]+_togoexpo-prod-' | xargs -r docker rm -f
+  docker compose up -d --remove-orphans
+fi
+for svc in $(docker compose config --services); do
+  cid=$(docker compose ps -q "$svc")
+  [ -z "$cid" ] && continue
+  running=$(docker inspect -f '{{.Image}}' "$cid")
+  wanted=$(docker image inspect -f '{{.Id}}' "$(docker inspect -f '{{.Config.Image}}' "$cid")")
+  if [ "$running" != "$wanted" ]; then
+    echo "$svc tourne sur une ancienne image : recréation."
+    docker compose up -d --no-deps --force-recreate "$svc"
+  fi
+done
+docker image prune -f >/dev/null
+docker compose ps --format '{{.Service}}: {{.Status}}'
+REMOTE
 
 echo "== Configuration Caddy =="
 # Le nouveau fichier est d'abord validé dans un conteneur jetable, puis
