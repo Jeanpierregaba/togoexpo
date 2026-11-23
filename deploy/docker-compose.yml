@@ -7,6 +7,9 @@
 #                 ├── STATS_DOMAIN     ──► umami (tableau de bord d'audience) ──► umami-db (PostgreSQL)
 #                 └── SITE_DOMAIN/_a/  ──► umami (script de mesure et collecte, seulement)
 #
+#   Interne seulement : translate (LibreTranslate) ◄── wordpress, pour proposer
+#   la version anglaise de chaque nouvel article en brouillon.
+#
 # Seul Caddy publie des ports. Le front lit WordPress par le réseau interne,
 # WordPress prévient le front par le réseau interne à chaque publication.
 # Réglages : deploy/.env (modèle : deploy/.env.example).
@@ -24,6 +27,7 @@ x-wp-env: &wp-env
     define('WP_SITEURL', 'https://${CMS_DOMAIN}');
     define('TOGOEXPO_FRONT_URL', 'http://front:3000');
     define('TOGOEXPO_REVALIDATE_SECRET', '${REVALIDATE_SECRET}');
+    define('TOGOEXPO_TRANSLATE_URL', 'http://translate:5000');
     define('DISALLOW_FILE_EDIT', true);
     define('WP_POST_REVISIONS', 20);
     define('WP_ENVIRONMENT_TYPE', 'production');
@@ -135,6 +139,27 @@ services:
       timeout: 5s
       retries: 30
 
+  # Traduction automatique (LibreTranslate), sur le réseau interne uniquement :
+  # aucun port publié, aucune donnée envoyée hors du serveur. Seuls le français
+  # et l'anglais sont chargés ; les modèles sont téléchargés au premier démarrage
+  # puis conservés dans le volume.
+  translate:
+    image: libretranslate/libretranslate:v1.9.6
+    restart: unless-stopped
+    environment:
+      LT_LOAD_ONLY: fr,en
+      LT_DISABLE_WEB_UI: "true"
+      LT_THREADS: 2
+    volumes:
+      - translate_models:/home/libretranslate/.local
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/languages', timeout=5)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 300s
+
   # Outil ponctuel : `docker compose run --rm wpcli <commande>`.
   wpcli:
     image: wordpress:cli-php8.3
@@ -161,3 +186,4 @@ volumes:
   wp_data:
   db_data:
   umami_db:
+  translate_models:
