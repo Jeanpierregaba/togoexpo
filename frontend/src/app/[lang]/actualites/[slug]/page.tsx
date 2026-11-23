@@ -80,18 +80,19 @@ export default async function ActuPage({ params }: Props) {
           mainEntityOfPage: `${siteUrl()}/${lang}/actualites/${params.slug}`,
         }}
       />
-      {/* Bannière : l'image mise en avant en fond, le titre seul par-dessus. */}
-      <PageHero image={post.image?.src ?? '/design/hero-togo-expo.jpg'} labelledBy="actu-title" overlay="strong">
-        <h1
-          id="actu-title"
-          className="m-0 max-w-[22ch] font-display text-[clamp(36px,5vw,72px)] font-semibold leading-[0.95] tracking-[-0.04em]"
-        >
-          {post.title}
-        </h1>
+      {/* Bannière : l'image mise en avant seule, sans texte ; le titre ouvre l'article. */}
+      <PageHero image={post.image?.src ?? '/design/hero-togo-expo.jpg'} labelledBy="actu-title" overlay="light">
+        {null}
       </PageHero>
-      <section aria-label={post.title} className="bg-cream px-5 py-[100px] text-forest sm:px-8 lg:px-14">
+      <section aria-label={post.title} className="bg-cream px-5 pb-[100px] pt-[72px] text-forest sm:px-8 lg:px-14">
         <div className="mx-auto max-w-[1360px]">
           <Reveal className="mx-auto max-w-[760px]">
+            <h1
+              id="actu-title"
+              className="m-0 mb-10 font-display text-[clamp(32px,4.2vw,56px)] font-semibold leading-[1.02] tracking-[-0.035em] text-forest"
+            >
+              {post.title}
+            </h1>
             <div
               className="text-[17px] leading-relaxed text-[#25372E] [&_a]:text-blood [&_a]:underline [&_a]:underline-offset-4 [&_figure]:my-8 [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-3xl [&_h2]:font-semibold [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-2xl [&_h3]:font-semibold [&_img]:rounded-3xl [&_li]:my-1.5 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-5 [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6]"
               dangerouslySetInnerHTML={{ __html: post.content }}

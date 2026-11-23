@@ -46,6 +46,17 @@ export function SiteFooter({ lang }: { lang: Lang }) {
         </Reveal>
         <div className="mx-auto mt-8 flex max-w-[1360px] flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-cream/60 sm:flex-row">
           <p>© {new Date().getFullYear()} {t.footer.rights}</p>
+          <p>
+            Powered by{' '}
+            <a
+              className="font-semibold text-cream/80 transition hover:text-cream"
+              href="https://ibdastudio.com/"
+              target="_blank"
+              rel="noopener"
+            >
+              IBDA STUDIO
+            </a>
+          </p>
           <div className="flex items-center gap-5">
             <a className="transition hover:text-cream" href={lz('/mentions-legales', lang)}>
               {t.footer.legal}
