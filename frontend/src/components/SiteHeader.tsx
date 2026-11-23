@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
-import { MOCK_EDITIONS, MOCK_EDITIONS_EN, MOCK_EDITIONS_JA, MOCK_UPCOMING, MOCK_UPCOMING_EN, MOCK_UPCOMING_JA } from '@/lib/editions';
+import { MOCK_EDITIONS, MOCK_EDITIONS_EN, MOCK_EDITIONS_JA, MOCK_UPCOMING, MOCK_UPCOMING_EN, MOCK_UPCOMING_JA, MOCK_EDITIONS_SR, MOCK_UPCOMING_SR } from '@/lib/editions';
 import { getDictionary } from '@/i18n/dict';
-import { baseSlug, lz, type Lang } from '@/i18n/lang';
+import { baseSlug, editionPath, lz, type Lang } from '@/i18n/lang';
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher';
 import { HeaderSocials } from './SocialGlyphs';
 
-const PAST_BY_LANG = { fr: MOCK_EDITIONS, en: MOCK_EDITIONS_EN, ja: MOCK_EDITIONS_JA };
-const UPCOMING_BY_LANG = { fr: MOCK_UPCOMING, en: MOCK_UPCOMING_EN, ja: MOCK_UPCOMING_JA };
+const PAST_BY_LANG = { fr: MOCK_EDITIONS, en: MOCK_EDITIONS_EN, ja: MOCK_EDITIONS_JA, sr: MOCK_EDITIONS_SR };
+const UPCOMING_BY_LANG = { fr: MOCK_UPCOMING, en: MOCK_UPCOMING_EN, ja: MOCK_UPCOMING_JA, sr: MOCK_UPCOMING_SR };
 
 /**
  * Menu « Archives » : slugs stables du CMS, libellés traduits.
@@ -119,7 +119,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
                         {menu.upcoming.map((u) => (
                           <li key={u.slug}>
                             <a
-                              href={lz(`/editions/${u.slug}`, lang)}
+                              href={lz(editionPath(u.slug, lang), lang)}
                               className="flex items-center justify-between gap-3 rounded-2xl bg-cream px-4 py-3 transition-colors hover:bg-sun/40"
                             >
                               <span>
@@ -142,7 +142,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
                         {menu.past.map((p) => (
                           <li key={p.slug}>
                             <a
-                              href={lz(`/editions/${p.slug}`, lang)}
+                              href={lz(editionPath(p.slug, lang), lang)}
                               className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-cream"
                             >
                               <span className="font-medium">{p.label}</span>
@@ -182,7 +182,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
         </ul>
         <div className="flex items-center gap-3">
           <div className="hidden min-[1100px]:block">
-            <HeaderSocials />
+            <HeaderSocials label={t.socialOn} />
           </div>
           <LanguageSwitcher />
           <button
@@ -214,7 +214,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
                   <ul className="m-0 mb-2 ml-4 list-none border-l border-white/15 p-0 pl-4 font-body text-base font-normal">
                     {[...menu.upcoming.map((u) => ({ slug: u.slug, label: u.name })), ...menu.past].map((e) => (
                       <li key={e.slug}>
-                        <a href={lz(`/editions/${e.slug}`, lang)} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-cream/80 transition-colors hover:bg-white/10 hover:text-cream">
+                        <a href={lz(editionPath(e.slug, lang), lang)} onClick={() => setOpen(false)} className="block rounded-xl px-3 py-2 text-cream/80 transition-colors hover:bg-white/10 hover:text-cream">
                           {e.label}
                         </a>
                       </li>
@@ -229,7 +229,7 @@ export function SiteHeader({ lang }: { lang: Lang }) {
               </li>
             ))}
             <li className="px-4 pb-2 pt-3">
-              <HeaderSocials />
+              <HeaderSocials label={t.socialOn} />
             </li>
           </ul>
         </div>

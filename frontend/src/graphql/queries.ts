@@ -68,6 +68,7 @@ export const GET_POST = /* GraphQL */ `
       date
       excerpt
       content
+      language { code }
       categories { nodes { name slug } }
       featuredImage { node { sourceUrl altText } }
     }

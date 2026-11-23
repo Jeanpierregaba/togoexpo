@@ -22,6 +22,7 @@ const TEXT = {
   fr: { kicker: 'EXPOSITIONS UNIVERSELLES · FOIRES INTERNATIONALES', title: ['Une ambition', 'sans frontières'] },
   en: { kicker: 'WORLD EXPOS · INTERNATIONAL FAIRS', title: ['An ambition', 'without borders'] },
   ja: { kicker: '万国博覧会 · 国際見本市', title: ['国境なき', '志'] },
+  sr: { kicker: 'СВЕТСКЕ ИЗЛОЖБЕ · МЕЂУНАРОДНИ САЈМОВИ', title: ['Амбиција', 'без граница'] },
 };
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
+import { Montserrat, Poppins } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import '../globals.css';
 import { JsonLd } from '@/components/JsonLd';
@@ -21,6 +21,17 @@ const poppins = Poppins({
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
   style: ['normal', 'italic'],
+});
+
+// Poppins n'a pas de cyrillique : le serbe s'affiche en Montserrat, géométrique
+// et proche. Pas de préchargement : seules les pages serbes la téléchargent.
+const montserrat = Montserrat({
+  subsets: ['cyrillic', 'latin'],
+  variable: '--font-cyrillic',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  preload: false,
 });
 
 export function generateStaticParams() {
@@ -91,7 +102,7 @@ export default function LangLayout({ children, params }: { children: React.React
   const lang = params.lang;
   const t = getDictionary(lang);
   return (
-    <html lang={lang} className={poppins.variable}>
+    <html lang={lang} className={`${poppins.variable} ${montserrat.variable}`}>
       <body>
         <JsonLd data={ORG_JSONLD} />
         <SiteHeader lang={lang} />

@@ -3,7 +3,7 @@ import { siteUrl } from '@/lib/site';
 import { wpQuery } from '@/lib/wp';
 import { GET_EDITIONS, GET_POSTS } from '@/graphql/queries';
 import type { EditionsQuery, PostsQuery } from '@/lib/mappers';
-import { LANGS, wpLanguage, type Lang } from '@/i18n/lang';
+import { DEDICATED_EDITIONS, LANGS, baseSlug, isCmsLang, wpLanguage, type Lang } from '@/i18n/lang';
 
 export const revalidate = 300;
 
@@ -26,13 +26,15 @@ function staticsFor(base: string, lang: Lang): MetadataRoute.Sitemap {
 
 /** Contenus CMS d'une langue (slugs Polylang propres à chaque langue). */
 async function cmsFor(base: string, lang: Lang): Promise<MetadataRoute.Sitemap> {
+  if (!isCmsLang(lang)) return [];
   try {
     const [e, p] = await Promise.all([
       wpQuery<EditionsQuery>(GET_EDITIONS, { language: wpLanguage(lang) }),
       wpQuery<PostsQuery>(GET_POSTS, { first: 100, language: wpLanguage(lang) }),
     ]);
     const editions: MetadataRoute.Sitemap = (e.editions?.nodes ?? [])
-      .filter((n) => Boolean(n.slug))
+      // Belgrade et Yokohama ont leur page dédiée, déjà listée dans STATIC_PATHS.
+      .filter((n) => Boolean(n.slug) && !(DEDICATED_EDITIONS as readonly string[]).includes(baseSlug(n.slug)))
       .map((n) => ({
         url: `${base}/${lang}/editions/${n.slug}`,
         lastModified: new Date(),

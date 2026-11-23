@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { DEFAULT_LANG, LANGS } from '@/i18n/lang';
+import { DEDICATED_EDITIONS, DEFAULT_LANG, LANGS } from '@/i18n/lang';
 
 // Emplacement imposé : avec un dossier `src/`, Next ne compile que `src/middleware.ts`.
 // À la racine de `frontend/`, le fichier est ignoré sans erreur et `/` tombe en 404.
@@ -21,6 +21,14 @@ export function middleware(req: NextRequest) {
     if (moved) {
       const url = req.nextUrl.clone();
       url.pathname = `/${seg}${moved}`;
+      return NextResponse.redirect(url, 308);
+    }
+    // Belgrade et Yokohama ont une page dédiée, à la même adresse dans les trois
+    // langues : l'ancienne forme suffixée (`belgrade-2027-en`) y renvoie.
+    const ed = /^\/editions\/([a-z0-9-]+)-(?:en|ja|sr)\/?$/.exec(rest);
+    if (ed && (DEDICATED_EDITIONS as readonly string[]).includes(ed[1])) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${seg}/editions/${ed[1]}`;
       return NextResponse.redirect(url, 308);
     }
     return NextResponse.next();

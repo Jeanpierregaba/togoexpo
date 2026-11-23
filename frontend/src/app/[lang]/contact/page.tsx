@@ -6,6 +6,7 @@ import { USEFUL_LINKS } from '@/lib/design';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
+import { fixedIn } from '@/i18n/fixed';
 import { withShare } from '@/lib/share';
 
 type Props = { params: { lang: string } };
@@ -120,7 +121,7 @@ export default function ContactPage({ params }: Props) {
                       rel="noreferrer"
                       className="inline-block rounded-full border border-forest/25 px-4 py-2 text-sm font-semibold transition-colors hover:border-forest hover:bg-forest hover:text-cream"
                     >
-                      {l.label} <span aria-hidden="true">↗</span>
+                      {fixedIn(l.label, lang)} <span aria-hidden="true">↗</span>
                     </a>
                   </li>
                 ))}

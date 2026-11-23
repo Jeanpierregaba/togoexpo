@@ -8,7 +8,7 @@ import { FriseTimeline } from '@/components/FriseTimeline';
 import { CountUp, HeroSlides } from '@/components/ArchiveMotion';
 import { PARTICIPATIONS, type Participation } from '@/lib/participations';
 import { getDictionary } from '@/i18n/dict';
-import { isLang, langAlternates, langSlug, lz, toLang, type Lang } from '@/i18n/lang';
+import { isLang, langAlternates, editionPath, lz, toLang, type Lang } from '@/i18n/lang';
 import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
@@ -267,7 +267,7 @@ function PhotoCard({ p, lang, a, big = false }: { p: Participation; lang: Lang; 
   );
   const cls = `group relative block h-full overflow-hidden rounded-[24px] bg-ink ${big ? 'min-h-[520px]' : 'min-h-[440px]'}`;
   return p.page ? (
-    <a href={lz(`/editions/${langSlug(p.page, lang)}`, lang)} className={cls}>
+    <a href={lz(editionPath(p.page, lang), lang)} className={cls}>
       {inner}
     </a>
   ) : (

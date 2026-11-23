@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { FlickrGallery } from '@/components/FlickrGallery';
 import { SectionKicker } from '@/components/SectionKicker';
 import { FLICKR_PHOTOS, FLICKR_URL } from '@/lib/flickr';
+import { fixedIn } from '@/i18n/fixed';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang } from '@/i18n/lang';
 import { withShare } from '@/lib/share';
@@ -29,7 +30,7 @@ export default function MediathequePage({ params }: Props) {
   if (!isLang(params.lang)) notFound();
   const lang = params.lang;
   const t = getDictionary(lang);
-  const photos = FLICKR_PHOTOS;
+  const photos = FLICKR_PHOTOS.map((p) => ({ ...p, title: fixedIn(p.title, lang) }));
 
   return (
     <>

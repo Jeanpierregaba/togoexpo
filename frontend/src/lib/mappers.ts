@@ -47,6 +47,7 @@ export type WPPostNode = {
   content?: string | null;
   categories?: { nodes?: WPTerm[] | null } | null;
   featuredImage?: { node?: WPImage | null } | null;
+  language?: { code?: string | null } | null;
 };
 
 export type PostsQuery = {
@@ -69,7 +70,8 @@ export type PostListItem = {
   readingMinutes: number;
 };
 
-export type PostDetail = PostListItem & { content: string };
+/** `lang` : langue de rédaction (Polylang), en minuscules ; absente si inconnue. */
+export type PostDetail = PostListItem & { content: string; lang?: string };
 
 export function stripTags(html: string): string {
   return html
@@ -84,7 +86,7 @@ export function readingMinutesOf(text: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-const DATE_LOCALES: Record<string, string> = { fr: 'fr-FR', en: 'en-US', ja: 'ja-JP' };
+const DATE_LOCALES: Record<string, string> = { fr: 'fr-FR', en: 'en-US', ja: 'ja-JP', sr: 'sr-Cyrl-RS' };
 
 /** Date longue dans la locale de la langue courante (fr par défaut). */
 export function formatDate(iso: string, lang: Lang = 'fr'): string {
@@ -132,6 +134,7 @@ export function mapPostDetail(p: WPPostNode): PostDetail | null {
     image: toImage(p.featuredImage, p.title),
     readingMinutes: readingMinutesOf(`${p.title ?? ''} ${p.content ?? ''}`),
     content: p.content ?? '',
+    lang: p.language?.code?.toLowerCase() || undefined,
   };
 }
 

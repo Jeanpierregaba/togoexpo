@@ -39,7 +39,8 @@ const GLYPHS: Record<string, ReactNode> = {
   ),
 };
 
-export function HeaderSocials() {
+/** `label` : début du nom accessible, traduit (« TogoExpo sur », « TogoExpo on »…). */
+export function HeaderSocials({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-1.5">
       {SOCIALS.map((s) => (
@@ -48,8 +49,8 @@ export function HeaderSocials() {
           href={s.href}
           target="_blank"
           rel="noreferrer"
-          aria-label={`TogoExpo sur ${s.label}`}
-          title={`TogoExpo sur ${s.label}`}
+          aria-label={`${label} ${s.label}`}
+          title={`${label} ${s.label}`}
           className="grid h-9 w-9 place-items-center rounded-full bg-sun text-forest transition hover:bg-forest hover:text-sun"
         >
           {GLYPHS[s.label]}

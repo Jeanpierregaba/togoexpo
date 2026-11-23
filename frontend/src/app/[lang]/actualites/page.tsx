@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { toPosts, type PostsQuery } from '@/lib/mappers';
-import { wpQuery } from '@/lib/wp';
-import { GET_POSTS } from '@/graphql/queries';
+import { postsWithFallback } from '@/lib/posts';
 import { getDictionary } from '@/i18n/dict';
-import { isLang, langAlternates, lz, toLang, wpLanguage, type Lang } from '@/i18n/lang';
+import { isLang, langAlternates, lz, toLang, type Lang } from '@/i18n/lang';
 import { ActusList } from '@/components/ActusList';
 import { FeaturedActu } from '@/components/FeaturedActu';
 import { PageHero } from '@/components/PageHero';
@@ -28,10 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 async function getPosts(lang: Lang) {
   try {
-    const res = await wpQuery<PostsQuery>(GET_POSTS, { first: 100, language: wpLanguage(lang) });
-    return toPosts(res.posts?.nodes);
+    return await postsWithFallback(lang, 100);
   } catch {
-    return [];
+    return { posts: [], fallback: false };
   }
 }
 
@@ -39,7 +36,7 @@ export default async function ActusPage({ params }: Props) {
   if (!isLang(params.lang)) notFound();
   const lang = params.lang;
   const t = getDictionary(lang);
-  const posts = await getPosts(lang);
+  const { posts, fallback } = await getPosts(lang);
   return (
     <>
       <PageHero image="/design/news-banniere.jpg" labelledBy="actus-hero-title">
@@ -72,6 +69,12 @@ export default async function ActusPage({ params }: Props) {
             </p>
           ) : (
             <>
+              {fallback && (
+                <p className="m-0 mb-10 inline-flex items-center gap-2.5 rounded-full border border-forest/20 bg-paper px-5 py-2.5 text-sm font-semibold text-[#42574C]">
+                  <span aria-hidden="true" className="font-mono text-[11px] uppercase tracking-[0.1em] text-blood">FR</span>
+                  {t.actusIdx.inFrench}
+                </p>
+              )}
               {/* La dernière publication occupe toute la largeur, au-dessus des filtres. */}
               <Reveal className="mb-14 block">
                 <FeaturedActu post={posts[0]} lang={lang} />

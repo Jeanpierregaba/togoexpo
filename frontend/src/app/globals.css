@@ -20,6 +20,13 @@ body {
   color: #166c54;
 }
 
+/* Serbe (cyrillique) : Montserrat, Poppins n'ayant pas de glyphes cyrilliques */
+html[lang='sr'] {
+  --font-display: var(--font-cyrillic);
+  --font-body: var(--font-cyrillic);
+  --font-mono: var(--font-cyrillic);
+}
+
 /* Japonais : polices système + césures adaptées (Instrument/Bricolage ne couvrent pas les kanas/kanjis) */
 html[lang='ja'] body {
   font-family:

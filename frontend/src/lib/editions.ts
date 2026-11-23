@@ -77,6 +77,21 @@ export const MOCK_UPCOMING_JA: EditionDetail[] = [
   },
 ];
 
+export const MOCK_UPCOMING_SR: EditionDetail[] = [
+  {
+    annee: 2027, ville: 'Јокохама', pays: 'Јапан', theme: 'Пејзаж будућности за срећу',
+    slug: 'yokohama-2027-sr', dateDebut: '2027-03-19T10:00:00+09:00', dateFin: '2027-09-26T00:00:00+09:00',
+    pavillon: 'Того учествује на међународној хортикултурној изложби GREEN×EXPO 2027: природа, одржива пољопривреда и зелене иновације.',
+    image: { src: '/design/event-yokohama-2027-mascot.jpg', alt: 'Маскота у облику срца, окружена расцветаним глобусом и тоговском траком' },
+  },
+  {
+    annee: 2027, ville: 'Београд', pays: 'Србија', theme: 'Игра за човечанство: спорт и музика за све',
+    slug: 'belgrade-2027-sr', dateDebut: '2027-05-15T10:00:00+02:00', dateFin: '2027-08-15T00:00:00+02:00',
+    pavillon: 'Того учествује на специјализованој изложби Експо 2027 Београд: млади, спорт, музика и култура.',
+    image: { src: '/design/event-belgrade-2027-dance.jpg', alt: 'Тоговска плесачица и двоје деце са пелеринама на графичкој позадини' },
+  },
+];
+
 export const MOCK_EDITIONS: Edition[] = [
   { annee: 2025, ville: 'Osaka', pays: 'Japon', theme: 'Inclusion et protection sociale', slug: 'osaka-2025' },
   { annee: 2021, ville: 'Dubaï', pays: 'EAU', theme: 'Connecter les esprits, construire le futur', slug: 'dubai-2021' },
@@ -100,6 +115,14 @@ export const MOCK_EDITIONS_JA: Edition[] = [
   { annee: 2015, ville: 'ミラノ', pays: 'イタリア', theme: '地球に食料を、生命にエネルギーを', slug: 'milan-2015-ja' },
   { annee: 2010, ville: '上海', pays: '中国', theme: 'より良い都市、より良い生活', slug: 'shanghai-2010-ja' },
   { annee: 2000, ville: 'ハノーファー', pays: 'ドイツ', theme: '人間・自然・技術', slug: 'hanovre-2000-ja' },
+];
+
+export const MOCK_EDITIONS_SR: Edition[] = [
+  { annee: 2025, ville: 'Осака', pays: 'Јапан', theme: 'Инклузија и социјална заштита', slug: 'osaka-2025-sr' },
+  { annee: 2021, ville: 'Дубаи', pays: 'УАЕ', theme: 'Повезивање умова, стварање будућности', slug: 'dubai-2021-sr' },
+  { annee: 2015, ville: 'Милано', pays: 'Италија', theme: 'Нахранити планету, енергија за живот', slug: 'milan-2015-sr' },
+  { annee: 2010, ville: 'Шангај', pays: 'Кина', theme: 'Бољи град, бољи живот', slug: 'shanghai-2010-sr' },
+  { annee: 2000, ville: 'Хановер', pays: 'Немачка', theme: 'Човек, природа, технологија', slug: 'hanovre-2000-sr' },
 ];
 
 export const MOCK_ACTUS: ActuItem[] = [];
@@ -160,12 +183,12 @@ export function getMockEditionDetail(slug: string): EditionDetail | undefined {
 // TODO agent: brancher WP — détails mock EN/JA (CMS injoignable, ex. preview Vercel).
 // Les champs traduits disponibles hors-ligne (ville/pays/thème, + pavillon pour 2027)
 // écrasent la fiche FR ; le reste retombe sur le FR plutôt que d'inventer du contenu.
-export function getMockEditionDetailLang(slug: string, lang: 'fr' | 'en' | 'ja' = 'fr'): EditionDetail | undefined {
+export function getMockEditionDetailLang(slug: string, lang: 'fr' | 'en' | 'ja' | 'sr' = 'fr'): EditionDetail | undefined {
   const suffix = lang === 'fr' ? '' : `-${lang}`;
-  const base = MOCK_EDITION_DETAILS[slug.replace(/-(en|ja)$/, '')];
+  const base = MOCK_EDITION_DETAILS[slug.replace(/-(en|ja|sr)$/, '')];
   if (!base || lang === 'fr') return base;
-  const list = lang === 'en' ? MOCK_EDITIONS_EN : MOCK_EDITIONS_JA;
-  const upcoming = lang === 'en' ? MOCK_UPCOMING_EN : MOCK_UPCOMING_JA;
+  const list = { en: MOCK_EDITIONS_EN, ja: MOCK_EDITIONS_JA, sr: MOCK_EDITIONS_SR }[lang];
+  const upcoming = { en: MOCK_UPCOMING_EN, ja: MOCK_UPCOMING_JA, sr: MOCK_UPCOMING_SR }[lang];
   const translated = list.find((e) => e.slug === `${base.slug}${suffix}`);
   const futur = upcoming.find((e) => e.slug === `${base.slug}${suffix}`);
   return {

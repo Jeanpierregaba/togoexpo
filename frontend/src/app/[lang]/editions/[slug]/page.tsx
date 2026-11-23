@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { MOCK_EDITIONS, MOCK_EDITIONS_EN, MOCK_EDITIONS_JA, getMockEditionDetailLang } from '@/lib/editions';
+import { MOCK_EDITIONS, MOCK_EDITIONS_EN, MOCK_EDITIONS_JA, MOCK_EDITIONS_SR, getMockEditionDetailLang } from '@/lib/editions';
 import { EDITION_CREDITS, EDITION_DETAILS } from '@/lib/design';
 import { formatDate, mapEditionDetail, stripTags, type EditionQuery, type EditionsQuery } from '@/lib/mappers';
 import { wpQuery } from '@/lib/wp';
 import { GET_EDITION, GET_EDITIONS } from '@/graphql/queries';
 import { siteUrl } from '@/lib/site';
 import { getDictionary } from '@/i18n/dict';
-import { LANGS, baseSlug, isLang, lz, slugAlternates, toLang, wpLanguage, type Lang } from '@/i18n/lang';
+import { LANGS, baseSlug, isCmsLang, isLang, lz, slugAlternates, toLang, wpLanguage, type Lang } from '@/i18n/lang';
 import { JsonLd } from '@/components/JsonLd';
 import { ArchiveEdition } from '@/components/ArchiveEdition';
 import { ARCHIVES, archiveContent, isArchiveSlug } from '@/lib/archives';
 import { Reveal } from '@/components/Reveal';
+import { fixedIn } from '@/i18n/fixed';
 import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
@@ -21,12 +22,14 @@ const MOCK_BY_LANG: Record<Lang, typeof MOCK_EDITIONS> = {
   fr: MOCK_EDITIONS,
   en: MOCK_EDITIONS_EN,
   ja: MOCK_EDITIONS_JA,
+  sr: MOCK_EDITIONS_SR,
 };
 
 // Appelé une fois par langue du segment parent : les slugs Polylang diffèrent par langue.
 export async function generateStaticParams({ params }: { params: { lang: string } }) {
   const lang = toLang(params.lang);
   try {
+    if (!isCmsLang(lang)) throw new Error('langue hors CMS');
     const res = await wpQuery<EditionsQuery>(GET_EDITIONS, { language: wpLanguage(lang) });
     const slugs = (res.editions?.nodes ?? []).map((n) => n.slug).filter(Boolean);
     if (slugs.length > 0) return slugs.map((slug) => ({ slug }));
@@ -48,7 +51,7 @@ async function getEdition(slug: string, lang: Lang) {
         // Pas d’image mise en avant en CMS : visuel vitrine statique (indexé sur le slug FR).
         if (!mapped.image) {
           const d = EDITION_DETAILS[baseSlug(slug)];
-          if (d?.image) mapped.image = { src: d.image, alt: d.imageAlt || `${mapped.ville} ${mapped.annee}` };
+          if (d?.image) mapped.image = { src: d.image, alt: d.imageAlt ? fixedIn(d.imageAlt, lang) : `${mapped.ville} ${mapped.annee}` };
         }
         return mapped;
       }
@@ -71,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${c.city} ${ARCHIVES[archive].year}`,
       description: c.lead,
       alternates: slugAlternates('/editions', params.slug, lang),
-    }, { image: { src: ARCHIVES[archive].image, alt: ARCHIVES[archive].imageAlt } });
+    }, { image: { src: ARCHIVES[archive].image, alt: fixedIn(ARCHIVES[archive].imageAlt, lang) } });
   }
   const edition = await getEdition(params.slug, lang);
   if (!edition) return { title: t.notFound.h1 };

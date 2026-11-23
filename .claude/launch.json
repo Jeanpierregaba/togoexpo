@@ -11,6 +11,23 @@
       "cwd": "frontend",
       "port": 3000,
       "url": "http://localhost:3000"
+    },
+    {
+      "name": "togoexpo-front-cms-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "cwd": "frontend",
+      "port": 3002,
+      "url": "http://localhost:3002",
+      "env": {
+        "WP_GRAPHQL_INTERNAL_URL": "https://cms.togoexpo.org/graphql",
+        "PORT": "3002",
+        "NEXT_PUBLIC_WP_URL": "https://cms.togoexpo.org",
+        "NEXT_PUBLIC_WP_GRAPHQL_URL": "https://cms.togoexpo.org/graphql"
+      }
     }
   ]
 }

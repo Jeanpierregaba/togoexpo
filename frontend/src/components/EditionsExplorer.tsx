@@ -4,8 +4,9 @@ import Image from 'next/image';
 import type { Edition } from '@/lib/editions';
 import { EDITION_DETAILS } from '@/lib/design';
 import { getDictionary } from '@/i18n/dict';
-import { baseSlug, lz, type Lang } from '@/i18n/lang';
+import { baseSlug, editionPath, lz, type Lang } from '@/i18n/lang';
 import { Reveal } from './Reveal';
+import { fixedIn } from '@/i18n/fixed';
 import { SectionKicker } from './SectionKicker';
 
 // Courbe « ease-out expo » : départ franc, arrivée longue — c'est elle qui donne
@@ -86,7 +87,7 @@ export function EditionsExplorer({ editions, lang }: { editions: Edition[]; lang
                   {d?.image && (
                     <Image
                       src={d.image}
-                      alt={on ? d.imageAlt : ''}
+                      alt={on ? fixedIn(d.imageAlt, lang) : ''}
                       fill
                       className="object-cover transition-transform duration-[1200ms] motion-reduce:transition-none"
                       style={{ transform: on ? 'scale(1)' : 'scale(1.18)', transitionTimingFunction: EASE }}
@@ -163,7 +164,7 @@ export function EditionsExplorer({ editions, lang }: { editions: Edition[]; lang
                           </span>
                         </span>
                         <a
-                          href={lz(`/editions/${e.slug}`, lang)}
+                          href={lz(editionPath(e.slug, lang), lang)}
                           tabIndex={on ? undefined : -1}
                           className="pointer-events-auto relative z-30 mt-4 inline-flex items-center gap-2.5 rounded-full bg-sun px-6 py-3.5 text-[15px] font-semibold text-forest transition-colors hover:bg-white"
                         >

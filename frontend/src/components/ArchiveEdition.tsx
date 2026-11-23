@@ -8,7 +8,8 @@ import { ArchiveTimeline } from '@/components/ArchiveTimeline';
 import { ARCHIVES, FLICKR_ALBUM, archiveContent, otherArchives, type ArchiveSlug } from '@/lib/archives';
 import { EDITION_CREDITS } from '@/lib/design';
 import { getDictionary } from '@/i18n/dict';
-import { langSlug, lz, type Lang } from '@/i18n/lang';
+import { fixedIn } from '@/i18n/fixed';
+import { editionPath, lz, type Lang } from '@/i18n/lang';
 
 const PAD = 'px-5 sm:px-8 lg:px-14';
 const H2 = 'm-0 font-display text-[clamp(30px,4.2vw,54px)] font-semibold leading-[0.98] tracking-[-0.035em]';
@@ -43,7 +44,7 @@ export function ArchiveEdition({ slug, lang }: { slug: ArchiveSlug; lang: Lang }
   const credit = EDITION_CREDITS[slug];
   const others = otherArchives(slug);
   // Photographies et légendes sont appariées par leur rang.
-  const photos = ed.photos?.map((p, i) => ({ ...p, alt: c.photoAlts?.[i] ?? ed.imageAlt }));
+  const photos = ed.photos?.map((p, i) => ({ ...p, alt: c.photoAlts?.[i] ?? fixedIn(ed.imageAlt, lang) }));
   const pick = (i: number | null | undefined) => (i == null ? undefined : photos?.[i]);
   const slides = ed.heroSlides?.map((i) => ed.photos?.[i]?.src).filter((x): x is string => Boolean(x));
   const strip = ed.strip?.map((i) => ed.photos?.[i]).filter((x): x is NonNullable<typeof x> => Boolean(x));
@@ -393,7 +394,7 @@ export function ArchiveEdition({ slug, lang }: { slug: ArchiveSlug; lang: Lang }
                 <li key={o.slug}>
                   <Reveal delay={i * 90}>
                     <a
-                      href={lz(`/editions/${langSlug(o.slug, lang)}`, lang)}
+                      href={lz(editionPath(o.slug, lang), lang)}
                       className="group block overflow-hidden rounded-[24px] border border-[#D3D6C8] bg-paper transition-colors duration-300 hover:border-pine/60"
                     >
                       <span className="relative block aspect-[16/10] overflow-hidden">

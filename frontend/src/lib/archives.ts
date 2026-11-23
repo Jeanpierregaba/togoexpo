@@ -1,5 +1,6 @@
 import type { Lang } from '@/i18n/lang';
 import { osaka } from '@/lib/archive-osaka';
+import { ARCHIVES_SR } from '@/lib/archives-sr';
 
 /**
  * Les participations passées racontées, et non plus seulement listées.
@@ -892,7 +893,7 @@ export const ARCHIVES: Record<ArchiveSlug, ArchiveEdition> = {
 
 /** Contenu d'une édition dans une langue. */
 export function archiveContent(slug: ArchiveSlug, lang: Lang): ArchiveContent {
-  return ARCHIVES[slug][lang];
+  return lang === 'sr' ? ARCHIVES_SR[slug] : ARCHIVES[slug][lang];
 }
 
 /** Les autres participations, pour le pied de page de l'édition. */

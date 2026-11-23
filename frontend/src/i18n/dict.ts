@@ -1,4 +1,5 @@
 import type { Lang } from './lang';
+import { sr } from './dict-sr';
 
 export type Dict = typeof fr;
 
@@ -1240,6 +1241,7 @@ const fr = {
     count: 'articles publiés',
     all: 'Tous les articles',
     searchPh: 'Rechercher un article…',
+    inFrench: '',
     searchAria: 'Rechercher dans les actualités',
     clear: 'Effacer la recherche',
     countOne: 'article',
@@ -1256,6 +1258,7 @@ const fr = {
     partner: 'Devenir partenaire ↗',
     more: 'À lire aussi',
     moreAccent: 'aussi',
+    inFrench: '',
   },
   media: {
     crumb: 'Médiathèque',
@@ -2767,6 +2770,7 @@ const en: Dict = {
     count: 'published articles',
     all: 'All articles',
     searchPh: 'Search for an article…',
+    inFrench: 'Our articles are currently published in French.',
     searchAria: 'Search the news',
     clear: 'Clear the search',
     countOne: 'article',
@@ -2783,6 +2787,7 @@ const en: Dict = {
     partner: 'Become a partner ↗',
     more: 'Further reading',
     moreAccent: 'reading',
+    inFrench: 'This article is available in French only.',
   },
   media: {
     crumb: 'Media library',
@@ -4297,6 +4302,7 @@ const ja: Dict = {
     count: '件の記事',
     all: 'すべての記事',
     searchPh: '記事を検索…',
+    inFrench: '記事は現在フランス語で掲載しています。',
     searchAria: 'ニュースを検索',
     clear: '検索をクリア',
     countOne: '件',
@@ -4313,6 +4319,7 @@ const ja: Dict = {
     partner: 'パートナーになる ↗',
     more: 'あわせて読みたい',
     moreAccent: 'あわせて',
+    inFrench: 'この記事はフランス語版のみです。',
   },
   media: {
     crumb: 'メディア',
@@ -4603,7 +4610,7 @@ const ja: Dict = {
   ],
 };
 
-export const dicts: Record<Lang, Dict> = { fr, en, ja };
+export const dicts: Record<Lang, Dict> = { fr, en, ja, sr };
 
 export function getDictionary(lang: Lang): Dict {
   return dicts[lang] ?? dicts.fr;

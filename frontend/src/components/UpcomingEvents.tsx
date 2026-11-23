@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { EditionDetail } from '@/lib/editions';
 import { getDictionary, type Dict } from '@/i18n/dict';
-import { baseSlug, localizePath, type Lang } from '@/i18n/lang';
+import { baseSlug, editionPath, localizePath, type Lang } from '@/i18n/lang';
 import { formatDate, stripTags } from '@/lib/mappers';
 import { CountdownPanel } from './CountdownPanel';
 import { Reveal } from './Reveal';
@@ -109,7 +109,7 @@ function EventPanel({ e, t, lang, hidden, animate, waiting }: { e: EditionDetail
         </p>
       )}
       <a
-        href={localizePath(`/editions/${e.slug}`, lang)}
+        href={localizePath(editionPath(e.slug, lang), lang)}
         tabIndex={hidden ? -1 : undefined}
         className="mt-5 inline-flex items-center gap-2.5 rounded-full bg-forest lg:mt-8 px-6 py-3 font-semibold text-cream transition-colors hover:bg-pine"
       >
