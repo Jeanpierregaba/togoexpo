@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { formatDate, mapPostDetail, toPosts, type PostQuery, type PostsQuery } from '@/lib/mappers';
+import { mapPostDetail, toPosts, type PostQuery, type PostsQuery } from '@/lib/mappers';
 import { wpQuery } from '@/lib/wp';
 import { GET_POST, GET_POSTS } from '@/graphql/queries';
 import { siteUrl } from '@/lib/site';
@@ -11,6 +10,7 @@ import { ActuCard } from '@/components/ActuCard';
 import { JsonLd } from '@/components/JsonLd';
 import { Reveal } from '@/components/Reveal';
 import { AccentTitle } from '@/components/SectionKicker';
+import { PageHero } from '@/components/PageHero';
 import { withShare } from '@/lib/share';
 
 export const revalidate = 300;
@@ -65,7 +65,6 @@ export default async function ActuPage({ params }: Props) {
   const post = await getPost(params.slug);
   if (!post) notFound();
   const more = await getMorePosts(lang, params.slug);
-  const category = post.categories[0]?.name;
   return (
     <article>
       <JsonLd
@@ -81,48 +80,18 @@ export default async function ActuPage({ params }: Props) {
           mainEntityOfPage: `${siteUrl()}/${lang}/actualites/${params.slug}`,
         }}
       />
-      <section aria-labelledby="actu-title" className="bg-ink px-5 pb-14 pt-36 text-cream sm:px-8 lg:px-14">
-        <div className="hero-in mx-auto max-w-[1360px]">
-          <p className="m-0 font-mono text-xs uppercase tracking-[0.1em] text-cream/75">
-            <a href={lz('/', lang)} className="transition hover:text-cream">{t.nav[0].label}</a> <span aria-hidden="true">/</span>{' '}
-            <a href={lz('/actualites', lang)} className="transition hover:text-cream">{t.actusIdx.h1}</a> <span aria-hidden="true">/</span>{' '}
-            {t.actuDetail.crumb}
-          </p>
-          <div className="mb-6 mt-10 flex flex-wrap items-center gap-x-4 gap-y-3">
-            {category && (
-              <span className="rounded-full bg-sun px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-forest">
-                {category}
-              </span>
-            )}
-            <p className="m-0 font-mono text-xs uppercase tracking-[0.1em] text-sun">
-              ● {post.date ? formatDate(post.date, lang) : t.actuDetail.crumb} · {post.readingMinutes} {t.actusIdx.min}
-            </p>
-          </div>
-          <h1
-            id="actu-title"
-            className="m-0 max-w-[22ch] font-display text-[clamp(36px,5vw,72px)] font-semibold leading-[0.95] tracking-[-0.04em]"
-          >
-            {post.title}
-          </h1>
-          {post.excerpt && (
-            <p className="mb-0 mt-6 max-w-[62ch] text-[clamp(16px,1.4vw,20px)] leading-relaxed text-mist">
-              {post.excerpt}
-            </p>
-          )}
-        </div>
-      </section>
+      {/* Bannière : l'image mise en avant en fond, le titre seul par-dessus. */}
+      <PageHero image={post.image?.src ?? '/design/hero-togo-expo.jpg'} labelledBy="actu-title" overlay="strong">
+        <h1
+          id="actu-title"
+          className="m-0 max-w-[22ch] font-display text-[clamp(36px,5vw,72px)] font-semibold leading-[0.95] tracking-[-0.04em]"
+        >
+          {post.title}
+        </h1>
+      </PageHero>
       <section aria-label={post.title} className="bg-cream px-5 py-[100px] text-forest sm:px-8 lg:px-14">
         <div className="mx-auto max-w-[1360px]">
-          {post.image && (
-            <Reveal>
-              <figure className="m-0 mx-auto max-w-[1020px] overflow-hidden rounded-[28px]">
-                <div className="relative aspect-[16/8]">
-                  <Image src={post.image.src} alt={post.image.alt} fill className="object-cover" sizes="100vw" priority />
-                </div>
-              </figure>
-            </Reveal>
-          )}
-          <Reveal className="mx-auto mt-12 max-w-[760px]">
+          <Reveal className="mx-auto max-w-[760px]">
             <div
               className="text-[17px] leading-relaxed text-[#25372E] [&_a]:text-blood [&_a]:underline [&_a]:underline-offset-4 [&_figure]:my-8 [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:font-display [&_h2]:text-3xl [&_h2]:font-semibold [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:font-display [&_h3]:text-2xl [&_h3]:font-semibold [&_img]:rounded-3xl [&_li]:my-1.5 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-5 [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6]"
               dangerouslySetInnerHTML={{ __html: post.content }}

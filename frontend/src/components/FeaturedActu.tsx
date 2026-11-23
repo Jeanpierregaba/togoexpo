@@ -4,7 +4,7 @@ import { getDictionary } from '@/i18n/dict';
 import { lz, type Lang } from '@/i18n/lang';
 
 /** Article mis en avant : même habillage que les cartes (aplat jaune, médaillon,
- *  pastille verte) mais sur toute la largeur, image et texte côte à côte. */
+ *  pastille verte) mais sur toute la largeur, image (16:9) et texte côte à côte. */
 export function FeaturedActu({ post, lang }: { post: PostListItem; lang: Lang }) {
   const t = getDictionary(lang);
   const year = post.date ? new Date(post.date).getFullYear() || null : null;
@@ -12,7 +12,8 @@ export function FeaturedActu({ post, lang }: { post: PostListItem; lang: Lang })
   const category = post.categories[0]?.name ?? t.actusHome.one;
   return (
     <article className="group grid gap-0 rounded-[32px] bg-sun p-3 text-forest transition-transform duration-500 hover:-translate-y-1.5 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-      <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] lg:aspect-auto lg:min-h-[420px]">
+      {/* Format 16:9, celui des images 1920 × 1080 publiées dans WordPress. */}
+      <div className="relative aspect-video self-center overflow-hidden rounded-[24px]">
         {post.image ? (
           <Image
             src={post.image.src}
@@ -20,6 +21,7 @@ export function FeaturedActu({ post, lang }: { post: PostListItem; lang: Lang })
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 1024px) 100vw, 60vw"
+            quality={85}
             priority
           />
         ) : (
