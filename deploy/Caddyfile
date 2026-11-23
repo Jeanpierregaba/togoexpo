@@ -10,11 +10,26 @@
 	# L'administration WordPress est sur le CMS : on y renvoie les anciennes adresses.
 	@admin path /wp-admin /wp-admin/* /wp-login.php
 	redir @admin https://{$CMS_DOMAIN}{uri} 302
+
+	# Mesure d'audience servie depuis le site lui-même : le script Umami et
+	# l'envoi des données, rien d'autre (le tableau de bord est sur STATS_DOMAIN).
+	@umami path /_a/script.js /_a/api/send
+	handle @umami {
+		uri strip_prefix /_a
+		reverse_proxy umami:3000
+	}
+
 	reverse_proxy front:3000
 }
 
 www.{$SITE_DOMAIN} {
 	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+# Le tableau de bord d'audience (Umami), réservé à l'équipe.
+{$STATS_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy umami:3000
 }
 
 # L'ancien domaine : toutes ses adresses renvoient définitivement (301) vers le

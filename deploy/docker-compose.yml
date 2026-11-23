@@ -3,7 +3,9 @@
 #   Internet ──► caddy (80/443, HTTPS automatique)
 #                 ├── SITE_DOMAIN      ──► front     (Next.js, port 3000)
 #                 ├── www.SITE_DOMAIN  ──► redirection vers SITE_DOMAIN
-#                 └── CMS_DOMAIN       ──► wordpress (Apache + PHP, port 80) ──► db (MySQL)
+#                 ├── CMS_DOMAIN       ──► wordpress (Apache + PHP, port 80) ──► db (MySQL)
+#                 ├── STATS_DOMAIN     ──► umami (tableau de bord d'audience) ──► umami-db (PostgreSQL)
+#                 └── SITE_DOMAIN/_a/  ──► umami (script de mesure et collecte, seulement)
 #
 # Seul Caddy publie des ports. Le front lit WordPress par le réseau interne,
 # WordPress prévient le front par le réseau interne à chaque publication.
@@ -37,6 +39,7 @@ services:
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN}
       CMS_DOMAIN: ${CMS_DOMAIN}
+      STATS_DOMAIN: ${STATS_DOMAIN:-stats.togoexpo.org}
       ACME_EMAIL: ${ACME_EMAIL}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
@@ -52,6 +55,7 @@ services:
     depends_on:
       - front
       - wordpress
+      - umami
 
   front:
     build:
@@ -101,6 +105,36 @@ services:
       timeout: 5s
       retries: 30
 
+  # Mesure d'audience (Umami) : sans cookies, données conservées sur ce serveur.
+  umami:
+    image: ghcr.io/umami-software/umami:3.4.1
+    restart: unless-stopped
+    init: true
+    environment:
+      DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD}@umami-db:5432/umami
+      APP_SECRET: ${UMAMI_APP_SECRET}
+      # Umami est derrière Caddy : l'adresse du visiteur est dans X-Forwarded-For.
+      CLIENT_IP_HEADER: x-forwarded-for
+      DISABLE_TELEMETRY: 1
+    depends_on:
+      umami-db:
+        condition: service_healthy
+
+  umami-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD}
+    volumes:
+      - umami_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
   # Outil ponctuel : `docker compose run --rm wpcli <commande>`.
   wpcli:
     image: wordpress:cli-php8.3
@@ -126,3 +160,4 @@ volumes:
   next_cache:
   wp_data:
   db_data:
+  umami_db:

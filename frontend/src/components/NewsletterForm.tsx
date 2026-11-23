@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { getDictionary } from '@/i18n/dict';
 import type { Lang } from '@/i18n/lang';
+import { track } from '@/lib/analytics';
 
 export function NewsletterForm({ lang }: { lang: Lang }) {
   const t = getDictionary(lang);
@@ -27,6 +28,7 @@ export function NewsletterForm({ lang }: { lang: Lang }) {
           website: '',
         }),
       });
+      if (res.ok) track('inscription-newsletter');
       setState(res.ok ? 'done' : 'error');
     } catch {
       setState('error');

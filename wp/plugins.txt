@@ -8,6 +8,7 @@ polylang
 seo-by-rank-math
 fluentform
 # Prod / médias / sécurité :
+simple-history
 enable-media-replace
 redirection
 wordfence

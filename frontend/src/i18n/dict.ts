@@ -1528,6 +1528,10 @@ const fr = {
         p: 'Le formulaire de contact collecte nom, organisation, e-mail et message dans le seul but de traiter les demandes de partenariat. Les données ne sont ni cédées ni revendues. Pour exercer vos droits d’accès, de rectification ou de suppression, écrivez à info@togoexpo.tg.',
       },
       {
+        h: 'Mesure d’audience',
+        p: 'Le site mesure sa fréquentation avec Umami, un outil libre hébergé sur nos propres serveurs. Il n’utilise aucun cookie et ne conserve ni adresse IP ni donnée permettant de vous identifier : seules des statistiques anonymes (pages vues, provenance, pays, type d’appareil, téléchargements) sont enregistrées. Aucune donnée n’est transmise à des tiers.',
+      },
+      {
         h: 'Propriété intellectuelle',
         p: 'Les contenus (textes, photos du pavillon) sont la propriété de TogoExpo ou de leurs auteurs. Toute reproduction sans autorisation est interdite.',
       },
@@ -3049,6 +3053,10 @@ const en: Dict = {
       {
         h: 'Personal data',
         p: 'The contact form collects name, organisation, email and message solely to process partnership requests. Data is never shared or sold. To exercise your rights of access, rectification or deletion, write to info@togoexpo.tg.',
+      },
+      {
+        h: 'Audience measurement',
+        p: 'The site measures its traffic with Umami, an open-source tool hosted on our own servers. It uses no cookies and stores neither IP addresses nor any data that could identify you: only anonymous statistics (page views, referrers, country, device type, downloads) are recorded. No data is passed on to third parties.',
       },
       {
         h: 'Intellectual property',
@@ -4574,6 +4582,10 @@ const ja: Dict = {
       {
         h: '個人データ',
         p: 'お問い合わせフォームはパートナーシップ対応のため名前、組織、メール、メッセージを収集します。譲渡・販売はしません。開示・訂正・削除はinfo@togoexpo.tgへ。',
+      },
+      {
+        h: 'アクセス解析',
+        p: '本サイトは、自社サーバーで運用するオープンソースのツール Umami でアクセス状況を計測しています。Cookie は使用せず、IP アドレスや個人を特定できる情報は保存しません。記録するのは匿名の統計（ページビュー、参照元、国、端末の種類、ダウンロード）のみで、第三者には提供しません。',
       },
       {
         h: '知的財産',

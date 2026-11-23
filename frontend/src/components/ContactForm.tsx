@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getDictionary } from '@/i18n/dict';
 import { lz, type Lang } from '@/i18n/lang';
+import { track } from '@/lib/analytics';
 import { SectionKicker } from './SectionKicker';
 
 // Motifs envoyés à /api/contact ; les libellés viennent du dictionnaire,
@@ -63,6 +64,7 @@ export function ContactForm({ lang }: { lang: Lang }) {
         setErrors(data.errors ?? { form: t.contact.errForm });
         return;
       }
+      track('formulaire-contact', { motif: payload.type });
       setSent(true);
     } catch {
       setErrors({ form: t.contact.errForm });

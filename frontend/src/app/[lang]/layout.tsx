@@ -7,6 +7,7 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import { Community } from '@/components/Community';
 import { BackToTop } from '@/components/BackToTop';
+import { Analytics } from '@/components/Analytics';
 import { getDictionary } from '@/i18n/dict';
 import { LANGS, isLang } from '@/i18n/lang';
 import { NEXT_EVENT } from '@/lib/design';
@@ -98,6 +99,7 @@ export default function LangLayout({ children, params }: { children: React.React
         <Community lang={lang} />
         <SiteFooter lang={lang} />
         <BackToTop label={t.backToTop} />
+        <Analytics />
       </body>
     </html>
   );

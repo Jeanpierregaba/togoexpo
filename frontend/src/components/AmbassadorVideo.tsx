@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
+import { track } from '@/lib/analytics';
 
 type Version = 'fr' | 'en';
 
@@ -39,6 +40,7 @@ export function AmbassadorVideo({
     const v = ref.current;
     if (!v) return;
     setStarted(true);
+    track('documentaire-lecture', { version });
     void v.play().catch(() => {});
     v.focus();
   }
@@ -48,6 +50,7 @@ export function AmbassadorVideo({
     if (next === version || !v) return;
     const time = v.currentTime;
     const playing = !v.paused && !v.ended;
+    track('documentaire-version', { version: next });
     setVersion(next);
     v.src = sources[next];
     v.addEventListener(
