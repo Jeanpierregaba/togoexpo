@@ -17,6 +17,12 @@ www.{$SITE_DOMAIN} {
 	redir https://{$SITE_DOMAIN}{uri} permanent
 }
 
+# L'ancien domaine : toutes ses adresses renvoient définitivement (301) vers le
+# site, au même chemin. Le DNS de togoexpo.tg pointe déjà vers ce serveur.
+togoexpo.tg, www.togoexpo.tg, http://togoexpo.tg, http://www.togoexpo.tg {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
 # Le CMS. Il n'a pas de site public : seuls l'administration, l'API GraphQL et
 # les médias répondent ; toute autre adresse renvoie vers le site public.
 {$CMS_DOMAIN} {
