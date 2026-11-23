@@ -9,7 +9,7 @@ import { TalentCards } from '@/components/TalentCards';
 import { Reveal } from '@/components/Reveal';
 import { RhythmCards } from '@/components/RhythmCards';
 import { AmbassadorVideo } from '@/components/AmbassadorVideo';
-import { BELGRADE_AMBASSADOR_POSTER, BELGRADE_AMBASSADOR_VIDEO, BELGRADE_IMG, BELGRADE_OFFICIAL_URL, BELGRADE_OPENING, BELGRADE_PRESS_DOCS, BELGRADE_STATUE, BELGRADE_STATUE_VIDEO } from '@/lib/belgrade';
+import { BELGRADE_AMBASSADOR_PORTRAIT, BELGRADE_AMBASSADOR_POSTER, BELGRADE_AMBASSADOR_VIDEO, BELGRADE_IMG, BELGRADE_OFFICIAL_URL, BELGRADE_OPENING, BELGRADE_PRESS_DOCS, BELGRADE_STATUE, BELGRADE_STATUE_VIDEO } from '@/lib/belgrade';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang, type Lang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
@@ -342,46 +342,88 @@ export default function BelgradePage({ params }: Props) {
         </div>
       </section>
 
-      {/* L'ambassadeur : Emmanuel Sheyi Adebayor et son documentaire, en
-          version française ou anglaise. Fond blanc entre le vert du thème et le
-          dégradé des Rythmes. */}
-      <section id="ambassadeur" aria-labelledby="belgrade-ambassadeur" className={`bg-white py-[110px] text-forest lg:py-[140px] ${PAD}`}>
-        <div className="mx-auto grid max-w-[1360px] items-center gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-          <div>
+      {/* L'ambassadeur : Emmanuel Sheyi Adebayor. Section sombre et cinéma :
+          son nom en filigrane géant, un portrait noir et blanc tiré du film,
+          sa phrase sur le Togo en exergue, puis le documentaire en grand, en
+          version française ou anglaise. */}
+      <section id="ambassadeur" aria-labelledby="belgrade-ambassadeur" className={`relative isolate overflow-hidden bg-ink py-[110px] text-cream lg:py-[150px] ${PAD}`}>
+        {/* Nom en filigrane, en contour, qui déborde de la section. */}
+        <p
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-[0.12em] left-1/2 -z-10 m-0 -translate-x-1/2 select-none whitespace-nowrap font-display text-[clamp(120px,24vw,380px)] font-bold uppercase leading-none tracking-[-0.04em] text-transparent [-webkit-text-stroke:1px_rgba(244,240,228,0.09)]"
+        >
+          {b.ambLast}
+        </p>
+        <div aria-hidden="true" className="pointer-events-none absolute -right-32 top-1/3 -z-10 h-[520px] w-[520px] rounded-full bg-forest/50 blur-[140px]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-40 bottom-0 -z-10 h-[420px] w-[420px] rounded-full bg-sun/10 blur-[140px]" />
+
+        <div className="mx-auto max-w-[1360px]">
+          <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+            {/* Portrait : liseré aux couleurs du drapeau et macaron de la fonction. */}
             <Reveal>
-              <p className="m-0 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.14em]">
-                <span aria-hidden="true" className="h-0.5 w-7 shrink-0 bg-blood" />
-                {b.ambKicker}
-              </p>
+              <figure className="relative m-0 mx-auto max-w-[480px] lg:mx-0">
+                <div className="absolute -left-3 top-8 bottom-8 flex w-1.5 flex-col overflow-hidden rounded-full" aria-hidden="true">
+                  <span className="flex-1 bg-[#006A4E]" />
+                  <span className="flex-1 bg-sun" />
+                  <span className="flex-1 bg-blood" />
+                </div>
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] ring-1 ring-cream/10">
+                  <Image
+                    src={BELGRADE_AMBASSADOR_PORTRAIT}
+                    alt={b.ambPortraitAlt}
+                    fill
+                    className="object-cover object-[50%_30%] grayscale"
+                    sizes="(max-width: 1024px) 90vw, 36vw"
+                  />
+                  <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+                </div>
+                <figcaption className="absolute -bottom-5 right-6 flex items-center gap-2 rounded-full bg-sun px-5 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-forest shadow-[0_20px_40px_-15px_rgba(0,0,0,0.6)] sm:right-[-1.25rem]">
+                  <span aria-hidden="true">★</span> {b.ambBadge}
+                </figcaption>
+              </figure>
             </Reveal>
-            <Reveal>
-              <h2 id="belgrade-ambassadeur" className={`${H2} m-0 mt-6`}>
-                {b.ambH2a}
-                <br />
-                <span className="text-blood">{b.ambH2b}</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={100}>
-              <p className="m-0 mt-7 max-w-[52ch] text-[17px] leading-relaxed text-[#25372E]">{b.ambPara}</p>
-            </Reveal>
-            <Reveal delay={160}>
-              <dl className="m-0 mt-9 grid gap-5 border-t border-forest/15 pt-7 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                {b.ambFacts.map((f) => (
-                  <div key={f.value}>
-                    <dt className="font-display text-[26px] font-semibold tracking-[-0.03em]">{f.value}</dt>
-                    <dd className="m-0 mt-1 text-sm leading-snug text-[#25372E]/80">{f.label}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
+
+            <div>
+              <Reveal>
+                <p className="m-0 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.14em] text-sun">
+                  <span aria-hidden="true" className="h-0.5 w-7 shrink-0 bg-sun" />
+                  {b.ambKicker}
+                </p>
+              </Reveal>
+              <Reveal>
+                <h2 id="belgrade-ambassadeur" className="m-0 mt-6 font-display font-semibold">
+                  <span className="block text-[clamp(26px,3vw,40px)] leading-none tracking-[-0.03em] text-cream/90">{b.ambFirst}</span>
+                  <span className="mt-1 block text-[clamp(64px,9.5vw,148px)] uppercase leading-[0.88] tracking-[-0.05em] text-sun">{b.ambLast}</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={80}>
+                <p className="m-0 mt-6 font-mono text-xs uppercase tracking-[0.14em] text-cream/70">{b.ambRole}</p>
+              </Reveal>
+              <Reveal delay={140}>
+                <blockquote className="relative m-0 mt-10 border-l-2 border-blood pl-7">
+                  <span aria-hidden="true" className="absolute -left-1 -top-9 font-display text-[96px] leading-none text-blood/70">“</span>
+                  <p className="m-0 font-display text-[clamp(22px,2.3vw,32px)] font-semibold italic leading-snug tracking-[-0.02em]">
+                    {b.ambQuote}
+                  </p>
+                  <footer className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-cream/55">— {b.ambQuoteBy}</footer>
+                </blockquote>
+              </Reveal>
+              <Reveal delay={200}>
+                <p className="m-0 mt-8 max-w-[58ch] text-[17px] leading-relaxed text-cream/75">{b.ambPara}</p>
+              </Reveal>
+            </div>
           </div>
-          <Reveal delay={120}>
-            <p className="m-0 mb-4 font-mono text-[11px] uppercase tracking-[0.14em] text-forest/70">{b.ambVideoLabel}</p>
+
+          {/* Le documentaire, en grand. */}
+          <Reveal delay={120} className="mt-24 lg:mt-32">
             <AmbassadorVideo
               sources={BELGRADE_AMBASSADOR_VIDEO}
               poster={BELGRADE_AMBASSADOR_POSTER}
               initial={lang === 'fr' ? 'fr' : 'en'}
               title={b.ambVideoTitle}
+              label={b.ambVideoLabel}
+              duration="1:44"
+              playLabel={b.ambPlay}
               versionLabel={b.ambVersion}
               versionNames={b.ambVersions}
             />

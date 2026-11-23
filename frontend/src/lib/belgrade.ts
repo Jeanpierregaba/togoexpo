@@ -118,3 +118,5 @@ export const BELGRADE_AMBASSADOR_VIDEO = {
   en: '/videos/adebayor-en.mp4',
 } as const;
 export const BELGRADE_AMBASSADOR_POSTER = '/design/belgrade/adebayor-poster.jpg';
+/** Portrait studio de l'ambassadeur, tiré du documentaire (8 s). */
+export const BELGRADE_AMBASSADOR_PORTRAIT = '/design/belgrade/adebayor-portrait.jpg';
