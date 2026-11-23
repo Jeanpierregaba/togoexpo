@@ -8,7 +8,8 @@ import { GameTiles } from '@/components/GameTiles';
 import { TalentCards } from '@/components/TalentCards';
 import { Reveal } from '@/components/Reveal';
 import { RhythmCards } from '@/components/RhythmCards';
-import { BELGRADE_IMG, BELGRADE_OFFICIAL_URL, BELGRADE_OPENING, BELGRADE_PRESS_DOCS, BELGRADE_STATUE, BELGRADE_STATUE_VIDEO } from '@/lib/belgrade';
+import { AmbassadorVideo } from '@/components/AmbassadorVideo';
+import { BELGRADE_AMBASSADOR_POSTER, BELGRADE_AMBASSADOR_VIDEO, BELGRADE_IMG, BELGRADE_OFFICIAL_URL, BELGRADE_OPENING, BELGRADE_PRESS_DOCS, BELGRADE_STATUE, BELGRADE_STATUE_VIDEO } from '@/lib/belgrade';
 import { getDictionary } from '@/i18n/dict';
 import { isLang, langAlternates, lz, toLang, type Lang } from '@/i18n/lang';
 import { AccentTitle, SectionKicker } from '@/components/SectionKicker';
@@ -337,6 +338,53 @@ export default function BelgradePage({ params }: Props) {
                 <p className="m-0 mt-3 text-[15px] leading-relaxed text-cream/80">{b.themeLogoPara}</p>
               </figcaption>
             </figure>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* L'ambassadeur : Emmanuel Sheyi Adebayor et son documentaire, en
+          version française ou anglaise. Fond blanc entre le vert du thème et le
+          dégradé des Rythmes. */}
+      <section id="ambassadeur" aria-labelledby="belgrade-ambassadeur" className={`bg-white py-[110px] text-forest lg:py-[140px] ${PAD}`}>
+        <div className="mx-auto grid max-w-[1360px] items-center gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div>
+            <Reveal>
+              <p className="m-0 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.14em]">
+                <span aria-hidden="true" className="h-0.5 w-7 shrink-0 bg-blood" />
+                {b.ambKicker}
+              </p>
+            </Reveal>
+            <Reveal>
+              <h2 id="belgrade-ambassadeur" className={`${H2} m-0 mt-6`}>
+                {b.ambH2a}
+                <br />
+                <span className="text-blood">{b.ambH2b}</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={100}>
+              <p className="m-0 mt-7 max-w-[52ch] text-[17px] leading-relaxed text-[#25372E]">{b.ambPara}</p>
+            </Reveal>
+            <Reveal delay={160}>
+              <dl className="m-0 mt-9 grid gap-5 border-t border-forest/15 pt-7 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                {b.ambFacts.map((f) => (
+                  <div key={f.value}>
+                    <dt className="font-display text-[26px] font-semibold tracking-[-0.03em]">{f.value}</dt>
+                    <dd className="m-0 mt-1 text-sm leading-snug text-[#25372E]/80">{f.label}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          </div>
+          <Reveal delay={120}>
+            <p className="m-0 mb-4 font-mono text-[11px] uppercase tracking-[0.14em] text-forest/70">{b.ambVideoLabel}</p>
+            <AmbassadorVideo
+              sources={BELGRADE_AMBASSADOR_VIDEO}
+              poster={BELGRADE_AMBASSADOR_POSTER}
+              initial={lang === 'fr' ? 'fr' : 'en'}
+              title={b.ambVideoTitle}
+              versionLabel={b.ambVersion}
+              versionNames={b.ambVersions}
+            />
           </Reveal>
         </div>
       </section>

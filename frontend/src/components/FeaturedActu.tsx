@@ -35,7 +35,7 @@ export function FeaturedActu({ post, lang }: { post: PostListItem; lang: Lang })
           {t.actusIdx.featured} · {category}
           {year ? ` · ${year}` : ''}
         </span>
-        <h2 className="m-0 font-display text-[clamp(32px,3.68vw,48px)] font-semibold leading-[1.02] tracking-[-0.03em]">
+        <h2 className="m-0 font-display text-[clamp(24px,2.2vw,32px)] font-semibold leading-[1.08] tracking-[-0.03em]">
           <a href={href} className="transition-opacity hover:opacity-75">
             {post.title}
           </a>

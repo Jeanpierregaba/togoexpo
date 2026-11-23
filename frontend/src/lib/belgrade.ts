@@ -110,3 +110,11 @@ export const BELGRADE_PRESS_DOCS: { href: string | null; weight: string | null }
   { href: null, weight: null },
   { href: null, weight: null },
 ];
+
+/** Documentaire de l'ambassadeur, Emmanuel Sheyi Adebayor : une version par
+ *  langue (H.264, 1080p, ~40 Mo) et une affiche tirée du film. */
+export const BELGRADE_AMBASSADOR_VIDEO = {
+  fr: '/videos/adebayor-fr.mp4',
+  en: '/videos/adebayor-en.mp4',
+} as const;
+export const BELGRADE_AMBASSADOR_POSTER = '/design/belgrade/adebayor-poster.jpg';
